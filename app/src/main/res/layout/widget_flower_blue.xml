@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="horizontal"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:id="@+id/flower_widget">
+
+        <ImageView
+            android:layout_width="52dp"
+            android:layout_height="52dp"
+            android:id="@+id/logoView"
+            android:src="@drawable/ic_flower_blue"
+            android:layout_centerHorizontal="true"
+            android:layout_alignParentTop="true"
+            android:background="@android:color/transparent"/>
+        <TextView
+            android:layout_width="72dp"
+            android:layout_height="36dp"
+            android:id="@+id/name"
+            android:layout_centerHorizontal="true"
+            android:layout_below="@+id/logoView"
+            android:textColor="#FFFFFF"
+            android:textSize="12dp"
+            android:textAlignment="center"
+            android:shadowColor="#000000"
+            android:background="@android:color/transparent"
+            android:shadowDx="1"
+            android:shadowDy="1"
+            android:shadowRadius="2"
+            android:text="JA-GOTT"/>
+
+</RelativeLayout>

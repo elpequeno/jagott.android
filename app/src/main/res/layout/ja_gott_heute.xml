@@ -1,0 +1,104 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:scrollbarAlwaysDrawVerticalTrack="true"
+    android:scrollbarStyle="outsideOverlay"
+    android:scrollbars="vertical">
+
+    <android.support.v4.widget.SwipeRefreshLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/swipe_container"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+    <ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/ScrollView01"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:layout_alignParentLeft="true" >
+
+
+    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="de.huerse.jagott.MainActivity$PlaceholderFragment">
+
+            <TextView
+                android:id="@+id/dateView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/image_heute_view"
+                android:layout_marginLeft="5dp"
+                android:layout_marginRight="10dp"
+                android:adjustViewBounds="true"
+                android:text="@string/date"
+                tools:context=".JaGott" />
+
+            <TextView
+                android:id="@+id/verseView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_below="@+id/dateView"
+                android:layout_marginTop="20dp"
+                android:layout_marginLeft="5dp"
+                android:layout_marginRight="10dp"
+                android:fadingEdge="vertical"
+                android:text="@string/message"
+                android:textStyle="bold"
+                tools:context=".JaGott" />
+
+            <ImageView
+                android:id="@+id/verseImage"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:adjustViewBounds="true"
+                android:layout_alignParentLeft="true"
+                android:layout_below="@+id/verseView"
+                android:src="@drawable/ic_empty" />
+
+            <TextView
+                android:id="@+id/messageView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_below="@+id/verseImage"
+                android:layout_marginTop="10dp"
+                android:layout_marginLeft="5dp"
+                android:layout_marginRight="10dp"
+                android:fadingEdge="vertical"
+                android:text="@string/date"
+                tools:context=".JaGott" />
+
+        <ImageView
+            android:id="@+id/image_heute_view"
+            android:layout_width="fill_parent"
+            android:layout_height="150dp"
+            android:src="@drawable/image_heute"
+            android:scaleType="centerCrop" />
+
+    </RelativeLayout>
+</ScrollView>
+
+    </android.support.v4.widget.SwipeRefreshLayout>
+    <Button android:id="@+id/btnSmaller"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:focusable="true"
+        android:background="@drawable/btn_minus_default"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true">
+    </Button>
+
+    <Button android:id="@+id/btnBigger"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:focusable="true"
+        android:background="@drawable/btn_plus_default"
+        android:layout_alignParentBottom="true"
+        android:layout_toLeftOf="@+id/btnSmaller">
+    </Button>
+</RelativeLayout>
