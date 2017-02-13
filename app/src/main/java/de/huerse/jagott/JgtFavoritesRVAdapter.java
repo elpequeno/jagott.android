@@ -1,6 +1,7 @@
 package de.huerse.jagott;
 
 import android.database.Cursor;
+import android.graphics.Color;
 import android.os.AsyncTask;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
@@ -30,6 +31,7 @@ public class JgtFavoritesRVAdapter extends RecyclerView.Adapter<JgtFavoritesRVAd
         JgtFavoritesViewHolder(View itemView) {
             super(itemView);
             cv = (CardView)itemView.findViewById(R.id.cv);
+            cv.setCardBackgroundColor(Color.LTGRAY);
             titleView = (TextView)itemView.findViewById(R.id.titleView);
         }
     }

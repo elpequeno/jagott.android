@@ -1,6 +1,7 @@
 package de.huerse.jagott;
 
 import android.content.res.Resources;
+import android.graphics.Color;
 import android.graphics.Paint;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
@@ -37,6 +38,7 @@ public class JgtAlarmRVAdapter extends RecyclerView.Adapter<JgtAlarmRVAdapter.Jg
         JgtAlarmViewHolder(View itemView) {
             super(itemView);
             cv = (CardView)itemView.findViewById(R.id.cv);
+            cv.setCardBackgroundColor(Color.LTGRAY);
             infoView = (TextView)itemView.findViewById(R.id.infoView);
             alarmInfoView = (TextView)itemView.findViewById(R.id.alarmInfo);
             alarmSetButton = (Button)itemView.findViewById(R.id.alarmSetButton);

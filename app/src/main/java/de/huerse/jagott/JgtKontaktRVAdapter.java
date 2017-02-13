@@ -1,5 +1,6 @@
 package de.huerse.jagott;
 
+import android.graphics.Color;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.text.Html;
@@ -32,6 +33,7 @@ public class JgtKontaktRVAdapter extends RecyclerView.Adapter<JgtKontaktRVAdapte
         JgtKontaktViewHolder(View itemView) {
             super(itemView);
             cv = (CardView)itemView.findViewById(R.id.cv);
+            cv.setCardBackgroundColor(Color.LTGRAY);
             image = (ImageView)itemView.findViewById(R.id.image);
             name= (TextView)itemView.findViewById(R.id.name);
             mail= (TextView)itemView.findViewById(R.id.mail);

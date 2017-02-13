@@ -1,6 +1,7 @@
 package de.huerse.jagott;
 
 import android.database.Cursor;
+import android.graphics.Color;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -29,6 +30,7 @@ public class JgtArchivRVAdapter extends RecyclerView.Adapter<JgtArchivRVAdapter.
         JgtArchivViewHolder(View itemView) {
             super(itemView);
             cv = (CardView)itemView.findViewById(R.id.cv);
+            cv.setCardBackgroundColor(Color.LTGRAY);
             titleView = (TextView)itemView.findViewById(R.id.titleView);
         }
     }
