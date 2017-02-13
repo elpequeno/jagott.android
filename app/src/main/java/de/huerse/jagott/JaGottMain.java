@@ -72,7 +72,10 @@ public class JaGottMain extends AppCompatActivity
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        // Make sure this is before calling super.onCreate
+        setTheme(R.style.JaGottLight);
         super.onCreate(savedInstanceState);
+
         setContentView(R.layout.jgt_main_activity);
 
         ButterKnife.inject(this);
