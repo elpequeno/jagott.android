@@ -4,26 +4,25 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.annotation.NonNull;
 import android.support.design.widget.CollapsingToolbarLayout;
+import android.support.design.widget.CoordinatorLayout;
+import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v4.widget.SwipeRefreshLayout;
-import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.graphics.Palette;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
@@ -41,14 +40,17 @@ import butterknife.InjectView;
 
 public class JaGottMain extends AppCompatActivity
         implements NavigationDrawerFragment.NavigationDrawerCallbacks,
-        OnItemSelectedListener, SwipeRefreshLayout.OnRefreshListener {
+        SwipeRefreshLayout.OnRefreshListener {
 
     CollapsingToolbarLayout mCollapsingToolbar;
-    int mutedColor = R.attr.colorPrimary;
-    @InjectView(R.id.drawer_layout) DrawerLayout mDrawerLayout;
-    @InjectView(R.id.anim_toolbar) Toolbar mToolbar;
-    @InjectView(R.id.navigation_view) NavigationView mNavigationView;
-    @InjectView(R.id.header) ImageView mImageHeaderView;
+    @InjectView(R.id.drawer_layout)
+    DrawerLayout mDrawerLayout;
+    @InjectView(R.id.anim_toolbar)
+    Toolbar mToolbar;
+    @InjectView(R.id.navigation_view)
+    NavigationView mNavigationView;
+    @InjectView(R.id.header)
+    ImageView mImageHeaderView;
     //@InjectView(R.id.drawer_recyclerView) RecyclerView drawerRecyclerView;
 
     /**
@@ -83,22 +85,9 @@ public class JaGottMain extends AppCompatActivity
         Global.GlobalMainActivity = this;   //MainActivity in globaler Variable merken, um inn gesamter App darauf zugreifen zu können... schlechter Stil... naja
 
         setSupportActionBar(mToolbar);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        //getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         mCollapsingToolbar = (CollapsingToolbarLayout) findViewById(R.id.collapsing_toolbar);
-        setTitle(R.string.title_section1);
-
-        Bitmap bitmap = BitmapFactory.decodeResource(getResources(),
-                R.drawable.dark_brown_grey);
-
-        Palette.from(bitmap).generate(new Palette.PaletteAsyncListener() {
-            @Override
-            public void onGenerated(Palette palette) {
-
-                mutedColor = palette.getMutedColor(R.attr.colorPrimary);
-                mCollapsingToolbar.setContentScrimColor(mutedColor);
-            }
-        });
 
         List<String> rows = new ArrayList<>();
         rows.add(getString(R.string.title_section1));
@@ -106,6 +95,10 @@ public class JaGottMain extends AppCompatActivity
         rows.add(getString(R.string.title_section3));
         rows.add(getString(R.string.title_section4));
         rows.add(getString(R.string.title_section5));
+
+        //hide Floating action button
+        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+        fab.hide();
 
         //Initialisierung der Variablen
         mAlarmHandler = new AlarmHandler(getApplicationContext());
@@ -123,14 +116,13 @@ public class JaGottMain extends AppCompatActivity
         setUpNavDrawer();
     }
 
-    private void initializeGUI()
-    {
-        ArrayList<String> jgtHeuteInit = new ArrayList<String>();
-        jgtHeuteInit.add(0,"-");
-        jgtHeuteInit.add(1,"Lade..." );
-        jgtHeuteInit.add(2,"-");
+    private void initializeGUI() {
+        ArrayList<String> jgtHeuteInit = new ArrayList<>();
+        jgtHeuteInit.add(0, "-");
+        jgtHeuteInit.add(1, "Lade...");
+        jgtHeuteInit.add(2, "-");
 
-        RecyclerView rv = (RecyclerView)findViewById(R.id.container);
+        RecyclerView rv = (RecyclerView) findViewById(R.id.container);
         LinearLayoutManager llm = new LinearLayoutManager(this);
         rv.setLayoutManager(llm);
 
@@ -152,13 +144,24 @@ public class JaGottMain extends AppCompatActivity
 
         mNavigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
             @Override
-            public boolean onNavigationItemSelected(MenuItem menuItem) {
+            public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
                 RecyclerView rv;
+                FloatingActionButton fab;
+                CoordinatorLayout.LayoutParams p;
+
                 menuItem.setChecked(true);
                 switch (menuItem.getItemId()) {
                     case R.id.title_section1:
                         initializeGUI();
                         setTitle(R.string.title_section1);
+
+                        //hide Floating action button
+                        fab = (FloatingActionButton) findViewById(R.id.fab);
+                        p = (CoordinatorLayout.LayoutParams) fab.getLayoutParams();
+                        p.setAnchorId(R.id.container);
+                        fab.setLayoutParams(p);
+                        fab.setVisibility(View.GONE);
+
                         mImageHeaderView.setImageResource(R.drawable.image_heute);
                         new JaGottHeute().execute();
                         //mCurrentSelectedPosition = 0;
@@ -174,15 +177,15 @@ public class JaGottMain extends AppCompatActivity
                         setTitle(R.string.title_section3);
                         mImageHeaderView.setImageResource(R.drawable.header_image_2);
                         ArrayList<KontaktData> kontakte = new ArrayList<KontaktData>();
-                        kontakte.add(new KontaktData("Habt ihr Fragen oder Anregungen?", "Dann schreibt uns doch eine Mail!", R.drawable.ic_empty ));
-                        kontakte.add(new KontaktData("Michael Bayer", "michael@ja-gott.de", R.drawable.ic_michael ));
+                        kontakte.add(new KontaktData("Habt ihr Fragen oder Anregungen?", "Dann schreibt uns doch eine Mail!", R.drawable.ic_launcher)); //ic_empty
+                        kontakte.add(new KontaktData("Michael Bayer", "michael@ja-gott.de", R.drawable.ic_michael));
                         kontakte.add(new KontaktData("Lena Vach", "lena@ja-gott.de", R.drawable.ic_lena));
-                        kontakte.add(new KontaktData("Carina Knoll", "carina@ja-gott.de", R.drawable.ic_carina));
+                        kontakte.add(new KontaktData("Carina Pfeiffer", "carina@ja-gott.de", R.drawable.ic_carina));
                         kontakte.add(new KontaktData("Kerstin Penner", "kerstin@ja-gott.de", R.drawable.ic_kerstin));
                         kontakte.add(new KontaktData("André Klein", "andre@ja-gott.de", R.drawable.andre));
                         kontakte.add(new KontaktData("Martin Forell", "matin@ja-gott.de", R.drawable.ic_launcher));
 
-                        rv = (RecyclerView)Global.GlobalMainActivity.findViewById(R.id.container);
+                        rv = (RecyclerView) findViewById(R.id.container);
 
                         JgtKontaktRVAdapter kontaktAdapter = new JgtKontaktRVAdapter(kontakte);
                         rv.setAdapter(kontaktAdapter);
@@ -192,7 +195,7 @@ public class JaGottMain extends AppCompatActivity
                         setTitle(R.string.title_section4);
 
                         //Set Adapter for Alarm
-                        rv = (RecyclerView)Global.GlobalMainActivity.findViewById(R.id.container);
+                        rv = (RecyclerView) findViewById(R.id.container);
 
                         JgtAlarmRVAdapter alarmAdapter = new JgtAlarmRVAdapter();
                         rv.setAdapter(alarmAdapter);
@@ -203,7 +206,15 @@ public class JaGottMain extends AppCompatActivity
                         //mCurrentSelectedPosition = 1;
                         break;
                     case R.id.title_section5:
-                        //setTitle(R.string.title_section5);
+
+                        fab = (FloatingActionButton) findViewById(R.id.fab);
+                        p = (CoordinatorLayout.LayoutParams) fab.getLayoutParams();
+                        p.setAnchorId(R.id.container);
+                        fab.setLayoutParams(p);
+                        fab.setVisibility(View.VISIBLE);
+                        //fab.show();
+
+                        setTitle(R.string.title_section5);
                         DBAdapter db = new DBAdapter(Global.GlobalMainActivity);
                         db.open();
 
@@ -219,12 +230,11 @@ public class JaGottMain extends AppCompatActivity
                                 archivList.add(name);
                                 archivDateList.add(cursor.getString(2));
                             } while (cursor.moveToNext());
-                        }
-                        catch(Exception e){
+                        } catch (Exception e) {
                             archivList.add("Du hast bisher keine Liebligstexte gespeichert.");
                         }
                         //Set Adapter for Favorties
-                        rv = (RecyclerView)Global.GlobalMainActivity.findViewById(R.id.container);
+                        rv = (RecyclerView) findViewById(R.id.container);
 
                         JgtFavoritesRVAdapter favoritesAdapter = new JgtFavoritesRVAdapter(archivList);
                         rv.setAdapter(favoritesAdapter);
@@ -240,70 +250,17 @@ public class JaGottMain extends AppCompatActivity
         });
     }
 
-    public void onItemSelected(AdapterView<?> parent, View view,
-                               int pos, long id) {
-        // An item was selected. You can retrieve the selected item using
-        // parent.getItemAtPosition(pos)
-        String selected = parent.getItemAtPosition(pos).toString();
-
-        //int selectedStyleThemeNumber = mStyleThemeMap.get(selected);
-        //setStyleTheme(mStyleThemeToSmallIntMap.get(selectedStyleThemeNumber));
-
-        //set member and write to file
-        //writeStyleThemeToFile(mStyleThemeToSmallIntMap.get(selectedStyleThemeNumber));
-        //mActiveStyleTheme = mStyleThemeToSmallIntMap.get(selectedStyleThemeNumber);
-        //setContentView(R.layout.settings);
-    }
-
-    //required by OnItemSelectedListener
-    public void onNothingSelected(AdapterView<?> parent) {
-        // Another interface callback
-    }
-
     @Override
     public void onNavigationDrawerItemSelected(int position) {
         // update the main content by replacing fragments
         //FragmentManager fragmentManager = getFragmentManager();
         //fragmentManager.beginTransaction()
-         //       .replace(R.id.container, PlaceholderFragment.newInstance(position + 1))
-         //       .commit();
-       //drawerLayout.closeDrawer(drawerRecyclerView);
+        //       .replace(R.id.container, PlaceholderFragment.newInstance(position + 1))
+        //       .commit();
+        //drawerLayout.closeDrawer(drawerRecyclerView);
     }
 
-//    public void onSectionAttached(int number) {
-//        switch (number) {
-//            case 1:
-//                setTitle(R.string.title_section1);
-//                new JaGottHeute().execute();
-//                break;
-//            case 2:
-//                setTitle(R.string.title_section2);
-//                new JaGottArchiv().execute();
-//                break;
-//            case 3:
-//                setTitle(R.string.title_section3);
-//                new JaGottKontakt().execute();
-//                break;
-//            case 4:
-//                setTitle(R.string.title_section4);
-//                mAlarmHandler.executeJaGottAlarm();
-//                break;
-//            case 5:
-//                setTitle(R.string.title_section5);
-//                new JaGottFavorite().execute();
-//                break;
-//        }
-//    }
-
-    public void restoreActionBar() {
-        getSupportActionBar().setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);
-        //getSupportActionBar().setDisplayShowTitleEnabled(true);
-        //getSupportActionBar().setTitle(mTitle);
-        mCollapsingToolbar.setTitle(mTitle);
-    }
-
-    public void setTitle(CharSequence title)
-    {
+    public void setTitle(CharSequence title) {
         mTitle = title;
         mCollapsingToolbar.setTitle(mTitle);
         mCollapsingToolbar.requestLayout();
@@ -311,38 +268,28 @@ public class JaGottMain extends AppCompatActivity
 
     }
 
-//    @Override
-//    public boolean onCreateOptionsMenu(Menu menu) {
-//        if (true) {
-//            // Only show items in the action bar relevant to this screen
-//            // if the drawer is not showing. Otherwise, let the drawer
-//            // decide what to show in the action bar.
-//            getMenuInflater().inflate(R.menu.ja_gott_main, menu);
-//            restoreActionBar();
-//            return true;
-//        }
-//        return super.onCreateOptionsMenu(menu);
-//    }
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.ja_gott_main, menu);
+        //restoreActionBar();
+        return super.onCreateOptionsMenu(menu);
+    }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle action bar item clicks here. The action bar will
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
 
-        //if (mDrawerToggle.onOptionsItemSelected(item)) {
-        //    return true;
-        //}
 
         if (item.getItemId() == R.id.action_share) {
             Toast.makeText(this, "Teilen", Toast.LENGTH_SHORT).show();
 
-            Intent sharingIntent = new Intent(android.content.Intent.ACTION_SEND);
+            Intent sharingIntent = new Intent(Intent.ACTION_SEND);
             sharingIntent.setType("text/plain");
             String shareBody = Global.GlobalJaGottCurrentText;
-            sharingIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, "JA-GOTT - Deine Seite zum Auftanken\n");
-            sharingIntent.putExtra(android.content.Intent.EXTRA_TEXT, shareBody);
+            sharingIntent.putExtra(Intent.EXTRA_SUBJECT, "JA-GOTT - Deine Seite zum Auftanken\n");
+            sharingIntent.putExtra(Intent.EXTRA_TEXT, shareBody);
             startActivity(Intent.createChooser(sharingIntent, "Share via"));
             return true;
         }
@@ -364,23 +311,20 @@ public class JaGottMain extends AppCompatActivity
 
             adb.setView(layout);
 
-            adb.setPositiveButton("Ok", new DialogInterface.OnClickListener()
-            {
-                public void onClick(DialogInterface dialog, int id)
-                {
+            adb.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int id) {
                     //Action for 'Ok' Button
                     DBAdapter db = new DBAdapter(Global.GlobalMainActivity);
                     db.open();
 
                     String save_name = name.getText().toString();
-                    if(save_name.isEmpty())
-                    {
+                    if (save_name.isEmpty()) {
                         save_name = Global.GlobalJaGottCurrentDate;
                     }
 
                     long record_id = -1;
                     Cursor cur = db.getRecord(save_name);
-                    if(cur.getCount() == 0) {
+                    if (cur.getCount() == 0) {
                         record_id = db.insertRecord(save_name,
                                 Global.GlobalJaGottCurrentDate,
                                 Global.GlobalJaGottCurrentVerse,
@@ -391,22 +335,18 @@ public class JaGottMain extends AppCompatActivity
 
                     db.open();
                     Cursor c = db.getRecord(record_id);
-                    if (c.moveToFirst())
-                    {
+                    if (c.moveToFirst()) {
                         Toast.makeText(Global.GlobalMainActivity,
-                                "Text gespeichert als: " + c.getString(1),  Toast.LENGTH_SHORT).show();
-                    }
-                    else
-                        Toast.makeText(Global.GlobalMainActivity, "Diesen Text hast du schon als Lieblingstext gespeichert.",Toast.LENGTH_LONG).show();
+                                "Text gespeichert als: " + c.getString(1), Toast.LENGTH_SHORT).show();
+                    } else
+                        Toast.makeText(Global.GlobalMainActivity, "Diesen Text hast du schon als Lieblingstext gespeichert.", Toast.LENGTH_LONG).show();
                     db.close();
                 }
             });
 
 
-            adb.setNegativeButton("Abbrechen", new DialogInterface.OnClickListener()
-            {
-                public void onClick(DialogInterface dialog, int id)
-                {
+            adb.setNegativeButton("Abbrechen", new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int id) {
                     // Action for 'Cancel' Button
                     Toast.makeText(Global.GlobalMainActivity, "Speichern abgebrochen.", Toast.LENGTH_SHORT).show();
                     dialog.cancel();
@@ -437,7 +377,8 @@ public class JaGottMain extends AppCompatActivity
         parser.refreshJaGottHeute();
         parser.refreshJaGottArchiv();
         new Handler().postDelayed(new Runnable() {
-            @Override public void run() {
+            @Override
+            public void run() {
                 swipeLayout.setRefreshing(false);
             }
         }, 5000);
@@ -451,19 +392,17 @@ public class JaGottMain extends AppCompatActivity
                     mTextSize += 2;
                 }
                 setTextViewSize();
-            }
-            else if (v == mBtnSmaller) {
+            } else if (v == mBtnSmaller) {
                 if (mTextSize > 8) {
                     mTextSize -= 2;
                 }
                 setTextViewSize();
-            }
-            else if (v == mBtnBack) {
+            } else if (v == mBtnBack) {
                 //Button_Back brings user back to fav list
             }
         }
 
-        private void setTextViewSize(){
+        private void setTextViewSize() {
             TextView date = (TextView) findViewById(R.id.dateView);
             date.setTextSize(mTextSize);
 
@@ -474,18 +413,17 @@ public class JaGottMain extends AppCompatActivity
             TextView message = (TextView) findViewById(R.id.messageView);
             message.setTextSize(mTextSize);
 
-            try{
-                TextView noteView = (TextView) Global.GlobalMainActivity.findViewById(R.id.noteView);
-                noteView.setTextSize(mTextSize);
-            }catch(Exception e){
+            try {
+                //TextView noteView = (TextView) findViewById(R.id.noteView);
+                //noteView.setTextSize(mTextSize);
+            } catch (Exception e) {
                 //do nothing, because TextView does not exist...
             }
-
         }
     }
 
     /**
-    * AsyncClass to load GUI for JaGottHeute
+     * AsyncClass to load GUI for JaGottHeute
      */
     public class JaGottHeute extends AsyncTask<String, Void, String> {
 
@@ -493,12 +431,11 @@ public class JaGottMain extends AppCompatActivity
         protected String doInBackground(String... strings) {
 
             return "";
-            //return JaGottParser.parseNewJaGottOnline();
         }
 
         @Override
         protected void onPostExecute(String result) {
-            try{
+            try {
                 //mBtnBigger = (Button) findViewById(R.id.btnBigger);
                 //mBtnBigger.setOnClickListener(mButtonHandler);
 
@@ -519,20 +456,19 @@ public class JaGottMain extends AppCompatActivity
                 //    @Override
                 //    public void onScrollChanged() {
 
-                 //       parallax(mImage);
-                        //DO SOMETHING WITH THE SCROLL COORDINATES
+                //       parallax(mImage);
+                //DO SOMETHING WITH THE SCROLL COORDINATES
 
-                 //   }
+                //   }
                 //});
+            } catch (Exception e) {
             }
-            catch(Exception e)
-            {}
 
         }
     }
 
     /**
-    * AsyncClass to load GUI for JaGottArchiv
+     * AsyncClass to load GUI for JaGottArchiv
      */
     private class JaGottArchiv extends AsyncTask<String, Void, String> {
 
@@ -574,8 +510,8 @@ public class JaGottMain extends AppCompatActivity
             Cursor cursor = db.getAllRecords();
             cursor.moveToFirst();
 
-            ArrayList<String> archivList = new ArrayList<String>();
-            ArrayList<String> archivDateList = new ArrayList<String>();
+            ArrayList<String> archivList = new ArrayList<>();
+            ArrayList<String> archivDateList = new ArrayList<>();
 
             try {
                 do {
@@ -591,12 +527,11 @@ public class JaGottMain extends AppCompatActivity
                 String[] archiveDateStringlist = new String[archivDateList.size()];
                 archiveDateStringlist = archivDateList.toArray(archiveDateStringlist);
 
-                mArchivListView = (ListView) Global.GlobalMainActivity.findViewById(R.id.favorite_list);
+                mArchivListView = (ListView) findViewById(R.id.favorite_list);
                 final CustomListArrayAdapter arrayAdapter = new CustomListArrayAdapter(Global.GlobalMainActivity,
                         archiveStringlist, archiveDateStringlist);
                 mArchivListView.setAdapter(arrayAdapter);
 
-                final String[] finalArchiveStringlist = archiveStringlist;
                 mArchivListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 
                     @Override
@@ -604,17 +539,15 @@ public class JaGottMain extends AppCompatActivity
                         try {
                             TextView listItemText = (TextView) view.findViewById(R.id.listItemText);
                             listItemText.performClick();
-                        }catch(Exception e)
-                        {
+                        } catch (Exception e) {
                             //do nothing
                         }
                     }
                 });
-            }
-            catch(Exception e){
+            } catch (Exception e) {
                 archivList.add("Du hast bisher keine Liebligstexte gespeichert.");
-                mArchivListView = (ListView) Global.GlobalMainActivity.findViewById(R.id.favorite_list);
-                ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(
+                mArchivListView = (ListView) findViewById(R.id.favorite_list);
+                ArrayAdapter<String> arrayAdapter = new ArrayAdapter<>(
                         Global.GlobalMainActivity,
                         android.R.layout.simple_list_item_1, archivList);
                 mArchivListView.setAdapter(arrayAdapter);

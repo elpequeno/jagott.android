@@ -8,11 +8,8 @@ import android.os.AsyncTask;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -109,19 +106,19 @@ public class CustomListArrayAdapter extends ArrayAdapter<String> {
                 verse.setText(cur.getString(3));
                 TextView messageView = (TextView) Global.GlobalMainActivity.findViewById(R.id.messageView);
                 messageView.setText(cur.getString(4));
-                TextView noteView = (TextView) Global.GlobalMainActivity.findViewById(R.id.noteView);
-                noteView.setText(cur.getString(5));
+                //TextView noteView = (TextView) Global.GlobalMainActivity.findViewById(R.id.noteView);
+                //noteView.setText(cur.getString(5));
 
                 //Global.GlobalMainActivity.setButtonListenerforFavoriteTextView();
 
-                Button editButton = (Button) Global.GlobalMainActivity.findViewById(R.id.edit_btn);
-                editButton.setOnClickListener(new EditButtonListener());
+                //Button editButton = (Button) Global.GlobalMainActivity.findViewById(R.id.edit_btn);
+                //editButton.setOnClickListener(new EditButtonListener());
 
-                Button deleteButton = (Button) Global.GlobalMainActivity.findViewById(R.id.delete_btn);
-                deleteButton.setOnClickListener(new DeleteButtonListener());
+                //Button deleteButton = (Button) Global.GlobalMainActivity.findViewById(R.id.delete_btn);
+                //deleteButton.setOnClickListener(new DeleteButtonListener());
 
-                Button backButton = (Button) Global.GlobalMainActivity.findViewById(R.id.btnBack);
-                backButton.setOnClickListener(new BackButtonListener());
+                //Button backButton = (Button) Global.GlobalMainActivity.findViewById(R.id.btnBack);
+                //backButton.setOnClickListener(new BackButtonListener());
 
             }
             catch(Exception e)

@@ -4,6 +4,7 @@ import android.graphics.Color;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.text.Html;
+import android.text.Spanned;
 import android.text.method.LinkMovementMethod;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -52,6 +53,7 @@ public class JgtKontaktRVAdapter extends RecyclerView.Adapter<JgtKontaktRVAdapte
         return jgtvh;
     }
 
+    @SuppressWarnings("deprecation")
     @Override
     public void onBindViewHolder(JgtKontaktViewHolder jgtKontaktViewHolder, int i) {
 
@@ -61,14 +63,21 @@ public class JgtKontaktRVAdapter extends RecyclerView.Adapter<JgtKontaktRVAdapte
         if (i== 0)
         {
             jgtKontaktViewHolder.image.getLayoutParams().height = 0;
+            jgtKontaktViewHolder.image.getLayoutParams().width = 0;
             jgtKontaktViewHolder.image.requestLayout();
         }
         else
         {
             jgtKontaktViewHolder.image.getLayoutParams().height = 400;
             jgtKontaktViewHolder.image.requestLayout();
-            String replaceMail = new String("<a href=\"mailto:" + m_JgtKontaktResult.get(i).mail + "\"> " + m_JgtKontaktResult.get(i).mail + " </a>");
-            jgtKontaktViewHolder.mail.setText(Html.fromHtml(replaceMail));
+            String replaceMailHtml = new String("<a href=\"mailto:" + m_JgtKontaktResult.get(i).mail + "\"> " + m_JgtKontaktResult.get(i).mail + " </a>");
+            Spanned replaceMail;
+            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N) {
+                replaceMail = Html.fromHtml(replaceMailHtml,Html.FROM_HTML_MODE_LEGACY);
+            } else {
+                replaceMail = Html.fromHtml(replaceMailHtml);
+            }
+            jgtKontaktViewHolder.mail.setText(replaceMail);
             jgtKontaktViewHolder.mail.setMovementMethod(LinkMovementMethod.getInstance());
         }
 

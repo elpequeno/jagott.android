@@ -84,12 +84,13 @@ public class JgtAlarmRVAdapter extends RecyclerView.Adapter<JgtAlarmRVAdapter.Jg
         int minute_numberpicker_id = system.getIdentifier("minute", "id", "android");
         //int ampm_numberpicker_id = system.getIdentifier("amPm", "id", "android");
 
+        jgtAlarmViewHolder.alarmTimePicker.setIs24HourView(true);
         NumberPicker hour_numberpicker = (NumberPicker) jgtAlarmViewHolder.alarmTimePicker.findViewById(hour_numberpicker_id);
         NumberPicker minute_numberpicker = (NumberPicker) jgtAlarmViewHolder.alarmTimePicker.findViewById(minute_numberpicker_id);
         //NumberPicker ampm_numberpicker = (NumberPicker) jgtAlarmViewHolder.alarmTimePicker.findViewById(ampm_numberpicker_id);
 
-        set_numberpicker_text_color(hour_numberpicker);
-        set_numberpicker_text_color(minute_numberpicker);
+        //set_numberpicker_text_color(hour_numberpicker);
+        //set_numberpicker_text_color(minute_numberpicker);
         //set_numberpicker_text_color(ampm_numberpicker);
     }
 

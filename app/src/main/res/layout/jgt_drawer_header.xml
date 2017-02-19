@@ -14,5 +14,5 @@
         android:layout_gravity="bottom"
         android:layout_margin="16dp"
         android:text="Your Name Here"
-        android:textColor="@android:color/white" />
+        android:textColor="@color/text_primary_light" />
 </FrameLayout>
