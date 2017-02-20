@@ -15,7 +15,7 @@ import android.widget.TextView;
 import java.util.List;
 
 /**
- * Created by André on 17.07.2015.
+ * RV Adapter for "Kontakte"
  */
 public class JgtKontaktRVAdapter extends RecyclerView.Adapter<JgtKontaktRVAdapter.JgtKontaktViewHolder>{
 
@@ -49,8 +49,7 @@ public class JgtKontaktRVAdapter extends RecyclerView.Adapter<JgtKontaktRVAdapte
     @Override
     public JgtKontaktViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
         View v = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.jgt_kontakt_card, viewGroup, false);
-        JgtKontaktViewHolder jgtvh = new JgtKontaktViewHolder(v);
-        return jgtvh;
+        return new JgtKontaktViewHolder(v);
     }
 
     @SuppressWarnings("deprecation")

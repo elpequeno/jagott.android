@@ -12,16 +12,13 @@ import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.support.v4.app.NotificationCompat;
 
-import de.huerse.jagott.JaGottMain;
-import de.huerse.jagott.R;
-
 
 public class AlarmReceiver extends BroadcastReceiver {
-
-	private static int NOTIFICATION_ID = 5555;
 	 
 	@Override
 	public void onReceive(Context context, Intent intent) {
+
+            int NOTIFICATION_ID = 5555;
 
         Intent notificationIntent = new Intent(context, JaGottMain.class);
         PendingIntent contentIntent = PendingIntent.getActivity(context,

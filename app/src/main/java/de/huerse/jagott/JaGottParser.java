@@ -4,8 +4,6 @@ package de.huerse.jagott;
 import android.os.AsyncTask;
 import android.support.v7.widget.RecyclerView;
 import android.text.Html;
-import android.view.View;
-import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -35,7 +33,6 @@ public class JaGottParser {
     private String url_archiv = "http://www.ja-gott.de/ja-gott-archiv.php";
     private String url_archiv_text = "http://www.ja-gott.de/ja_gott_archiv_text.php";
 
-    private ArchivListHandler mArchivListHandler = new ArchivListHandler();
     ListView mArchivListView;
     ArrayList<NameValuePair> mNameValuePairs = new ArrayList<NameValuePair>();
 
@@ -201,19 +198,12 @@ public class JaGottParser {
         }
     }
 
-    private class ArchivListHandler implements AdapterView.OnItemClickListener {
-        @Override
-        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-            Global.GlobalMainActivity.onNavigationDrawerItemSelected(22);
+    public void clickOnArchiveText(String selected) {
+        mNameValuePairs.add(new BasicNameValuePair("title", selected));
 
-            String selected = parent.getItemAtPosition(position).toString();
-
-            mNameValuePairs.add(new BasicNameValuePair("title", selected));
-
-            ArchivTextJsonReadTask task = new ArchivTextJsonReadTask();
-            // passes values for the urls string array
-            task.execute(new String[]{url_archiv_text});
-        }
+        ArchivTextJsonReadTask task = new ArchivTextJsonReadTask();
+        // passes values for the urls string array
+        task.execute(new String[]{url_archiv_text});
     }
 
     // Async Task to access the web

@@ -1,6 +1,5 @@
 package de.huerse.jagott;
 
-import android.database.Cursor;
 import android.graphics.Color;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
@@ -57,18 +56,9 @@ public class JgtArchivRVAdapter extends RecyclerView.Adapter<JgtArchivRVAdapter.
                 TextView tv = (TextView) v;
                 String selectedDate = tv.getText().toString();
 
-                DBAdapter db = new DBAdapter(Global.GlobalMainActivity);
-                db.open();
-
-                Cursor cur = db.getRecord(selectedDate, true);
-
-                try{
-                    Global.GlobalMainActivity.setTitle(cur.getString(1));
-
-                    //new FavoriteDisplayTask().execute(cur.getString(1));
-                }catch(Exception e)
-                {}
-
+                RecyclerView rv = (RecyclerView) Global.GlobalMainActivity.findViewById(R.id.container);
+                JgtArchivTextRVAdapter archivTextAdapter = new JgtArchivTextRVAdapter(selectedDate);
+                rv.setAdapter(archivTextAdapter);
             }
         });
     }

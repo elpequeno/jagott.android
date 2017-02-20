@@ -48,7 +48,6 @@ public class CustomListArrayAdapter extends ArrayAdapter<String> {
         listItemText.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Global.GlobalMainActivity.onNavigationDrawerItemSelected(21);
 
                 TextView tv = (TextView) v;
                 mSelectedName = tv.getText().toString();
@@ -61,7 +60,6 @@ public class CustomListArrayAdapter extends ArrayAdapter<String> {
         listItemDate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Global.GlobalMainActivity.onNavigationDrawerItemSelected(21);
 
 
                 TextView tv = (TextView) v;
@@ -228,8 +226,6 @@ public class CustomListArrayAdapter extends ArrayAdapter<String> {
     private class BackButtonListener implements View.OnClickListener {
 
         public void onClick(View v) {
-
-            Global.GlobalMainActivity.onNavigationDrawerItemSelected(4);
         }
     }
 }

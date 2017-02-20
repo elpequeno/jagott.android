@@ -2,27 +2,20 @@ package de.huerse.jagott;
 
 import android.content.res.Resources;
 import android.graphics.Color;
-import android.graphics.Paint;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.NumberPicker;
 import android.widget.TextView;
 import android.widget.TimePicker;
 
-import java.lang.reflect.Field;
-import java.util.List;
-
 /**
- * Created by André on 17.07.2015.
+ * RV Adapter for Alarm View
  */
 public class JgtAlarmRVAdapter extends RecyclerView.Adapter<JgtAlarmRVAdapter.JgtAlarmViewHolder>{
-
-    List<String> m_JgtAlarmResult;
 
     JgtAlarmRVAdapter(){
     }
@@ -92,29 +85,5 @@ public class JgtAlarmRVAdapter extends RecyclerView.Adapter<JgtAlarmRVAdapter.Jg
         //set_numberpicker_text_color(hour_numberpicker);
         //set_numberpicker_text_color(minute_numberpicker);
         //set_numberpicker_text_color(ampm_numberpicker);
-    }
-
-    private void set_numberpicker_text_color(NumberPicker number_picker){
-        final int count = number_picker.getChildCount();
-        final int color = Global.GlobalMainActivity.getResources().getColor(R.color.black);
-
-        for(int i = 0; i < count; i++){
-            View child = number_picker.getChildAt(i);
-
-            try{
-                Field wheelpaint_field = number_picker.getClass().getDeclaredField("mSelectorWheelPaint");
-                wheelpaint_field.setAccessible(true);
-
-                ((Paint)wheelpaint_field.get(number_picker)).setColor(color);
-                ((EditText)child).setTextColor(color);
-                number_picker.invalidate();
-            }
-            catch(NoSuchFieldException e){
-            }
-            catch(IllegalAccessException e){
-            }
-            catch(IllegalArgumentException e){
-            }
-        }
     }
 }

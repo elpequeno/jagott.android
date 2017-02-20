@@ -19,7 +19,7 @@ import java.io.IOException;
 import java.util.Calendar;
 
 /**
- * Created by andre on 28.10.2014.
+ * Handels send Alarms and notifies user to read JA-GOTT
  */
 public class AlarmHandler extends Activity implements View.OnClickListener {
 
@@ -105,14 +105,11 @@ public class AlarmHandler extends Activity implements View.OnClickListener {
         cal.set(Calendar.MINUTE, alarmMinute);
         cal.set(Calendar.SECOND, 0);
 
-        int day = cal.get(Calendar.DAY_OF_MONTH);
-
         if( hour > alarmHour || ( hour == alarmHour && minute >= alarmMinute) )
         {
             cal.add(Calendar.DAY_OF_MONTH, 1);
         }
 
-        day = cal.get(Calendar.DAY_OF_MONTH);
         PendingIntent sender = PendingIntent.getBroadcast(mApplicationContext, HELLO_ID, mAlarmIntent, PendingIntent.FLAG_UPDATE_CURRENT);//)|  Intent.FILL_IN_DATA);
 
         AlarmManager am = (AlarmManager) mApplicationContext.getSystemService(ALARM_SERVICE);

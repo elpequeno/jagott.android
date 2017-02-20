@@ -12,7 +12,7 @@ import android.widget.TextView;
 import java.util.List;
 
 /**
- * Created by André on 17.07.2015.
+ * CRV Adapter for JaGottHeute
  */
 public class JgtHeuteRVAdapter extends RecyclerView.Adapter<JgtHeuteRVAdapter.JgtHeuteViewHolder>{
 
@@ -46,8 +46,7 @@ public class JgtHeuteRVAdapter extends RecyclerView.Adapter<JgtHeuteRVAdapter.Jg
     @Override
     public JgtHeuteViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
         View v = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.jgt_heute, viewGroup, false);
-        JgtHeuteViewHolder jgtvh = new JgtHeuteViewHolder(v);
-        return jgtvh;
+        return new JgtHeuteViewHolder(v);
     }
 
     @Override

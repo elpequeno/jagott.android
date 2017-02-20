@@ -1,7 +1,7 @@
 package de.huerse.jagott;
 
 /**
- * Created by André on 20.07.2015.
+ * Kontaktdaten mit Englisch-Deutsch-Mix
  */
 public class KontaktData {
     String name;

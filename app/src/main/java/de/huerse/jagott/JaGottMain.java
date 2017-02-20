@@ -33,14 +33,12 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 
 public class JaGottMain extends AppCompatActivity
-        implements NavigationDrawerFragment.NavigationDrawerCallbacks,
-        SwipeRefreshLayout.OnRefreshListener {
+        implements SwipeRefreshLayout.OnRefreshListener {
 
     CollapsingToolbarLayout mCollapsingToolbar;
     @InjectView(R.id.drawer_layout)
@@ -53,9 +51,6 @@ public class JaGottMain extends AppCompatActivity
     ImageView mImageHeaderView;
     //@InjectView(R.id.drawer_recyclerView) RecyclerView drawerRecyclerView;
 
-    /**
-     * Used to store the last screen title. For use in {@link #restoreActionBar()}.
-     */
     private CharSequence mTitle;
 
     //Buttons
@@ -89,13 +84,6 @@ public class JaGottMain extends AppCompatActivity
 
         mCollapsingToolbar = (CollapsingToolbarLayout) findViewById(R.id.collapsing_toolbar);
 
-        List<String> rows = new ArrayList<>();
-        rows.add(getString(R.string.title_section1));
-        rows.add(getString(R.string.title_section2));
-        rows.add(getString(R.string.title_section3));
-        rows.add(getString(R.string.title_section4));
-        rows.add(getString(R.string.title_section5));
-
         //hide Floating action button
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.hide();
@@ -109,6 +97,7 @@ public class JaGottMain extends AppCompatActivity
 
         initializeGUI();
 
+        //this lines are needed to prevent title from vanishing when toolbar collapses
         setTitle(R.string.title_section1);
         new JaGottHeute().execute();
 
@@ -153,6 +142,7 @@ public class JaGottMain extends AppCompatActivity
                 switch (menuItem.getItemId()) {
                     case R.id.title_section1:
                         initializeGUI();
+                        //this lines are needed to prevent title from vanishing when toolbar collapses
                         setTitle(R.string.title_section1);
 
                         //hide Floating action button
@@ -162,18 +152,19 @@ public class JaGottMain extends AppCompatActivity
                         fab.setLayoutParams(p);
                         fab.setVisibility(View.GONE);
 
-                        mImageHeaderView.setImageResource(R.drawable.image_heute);
+                        mImageHeaderView.setImageResource(R.drawable.image_heute2);
                         new JaGottHeute().execute();
                         //mCurrentSelectedPosition = 0;
                         break;
                     case R.id.title_section2:
-                        initializeGUI();
+                        //this lines are needed to prevent title from vanishing when toolbar collapses
                         setTitle(R.string.title_section2);
                         mImageHeaderView.setImageResource(R.drawable.header_image_1);
                         new JaGottArchiv().execute();
                         //mCurrentSelectedPosition = 1;
                         break;
                     case R.id.title_section3:
+                        //this lines are needed to prevent title from vanishing when toolbar collapses
                         setTitle(R.string.title_section3);
                         mImageHeaderView.setImageResource(R.drawable.header_image_2);
                         ArrayList<KontaktData> kontakte = new ArrayList<KontaktData>();
@@ -192,6 +183,7 @@ public class JaGottMain extends AppCompatActivity
                         //mCurrentSelectedPosition = 0;
                         break;
                     case R.id.title_section4:
+                        //this lines are needed to prevent title from vanishing when toolbar collapses
                         setTitle(R.string.title_section4);
 
                         //Set Adapter for Alarm
@@ -206,7 +198,6 @@ public class JaGottMain extends AppCompatActivity
                         //mCurrentSelectedPosition = 1;
                         break;
                     case R.id.title_section5:
-
                         fab = (FloatingActionButton) findViewById(R.id.fab);
                         p = (CoordinatorLayout.LayoutParams) fab.getLayoutParams();
                         p.setAnchorId(R.id.container);
@@ -214,6 +205,7 @@ public class JaGottMain extends AppCompatActivity
                         fab.setVisibility(View.VISIBLE);
                         //fab.show();
 
+                        //this lines are needed to prevent title from vanishing when toolbar collapses
                         setTitle(R.string.title_section5);
                         DBAdapter db = new DBAdapter(Global.GlobalMainActivity);
                         db.open();
@@ -221,8 +213,8 @@ public class JaGottMain extends AppCompatActivity
                         Cursor cursor = db.getAllRecords();
                         cursor.moveToFirst();
 
-                        ArrayList<String> archivList = new ArrayList<String>();
-                        ArrayList<String> archivDateList = new ArrayList<String>();
+                        ArrayList<String> archivList = new ArrayList<>();
+                        ArrayList<String> archivDateList = new ArrayList<>();
 
                         try {
                             do {
@@ -248,16 +240,6 @@ public class JaGottMain extends AppCompatActivity
                 return true;
             }
         });
-    }
-
-    @Override
-    public void onNavigationDrawerItemSelected(int position) {
-        // update the main content by replacing fragments
-        //FragmentManager fragmentManager = getFragmentManager();
-        //fragmentManager.beginTransaction()
-        //       .replace(R.id.container, PlaceholderFragment.newInstance(position + 1))
-        //       .commit();
-        //drawerLayout.closeDrawer(drawerRecyclerView);
     }
 
     public void setTitle(CharSequence title) {
