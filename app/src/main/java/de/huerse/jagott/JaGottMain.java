@@ -49,6 +49,7 @@ public class JaGottMain extends AppCompatActivity
     NavigationView mNavigationView;
     @InjectView(R.id.header)
     ImageView mImageHeaderView;
+    SwipeRefreshLayout mSwipeRefreshLayout;
     //@InjectView(R.id.drawer_recyclerView) RecyclerView drawerRecyclerView;
 
     private CharSequence mTitle;
@@ -67,6 +68,8 @@ public class JaGottMain extends AppCompatActivity
     ListView mArchivListView;
     SwipeRefreshLayout swipeLayout;
 
+    int mSection;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         // Make sure this is before calling super.onCreate
@@ -83,6 +86,7 @@ public class JaGottMain extends AppCompatActivity
         //getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         mCollapsingToolbar = (CollapsingToolbarLayout) findViewById(R.id.collapsing_toolbar);
+        mSwipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipeContainer);
 
         //hide Floating action button
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
@@ -96,6 +100,14 @@ public class JaGottMain extends AppCompatActivity
         mTitle = getTitle();
 
         initializeGUI();
+        mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                // Refresh items
+                refreshItems();
+            }
+        });
+        mSection = 0;
 
         //this lines are needed to prevent title from vanishing when toolbar collapses
         setTitle(R.string.title_section1);
@@ -117,6 +129,34 @@ public class JaGottMain extends AppCompatActivity
 
         JgtHeuteRVAdapter adapter = new JgtHeuteRVAdapter(jgtHeuteInit);
         rv.setAdapter(adapter);
+    }
+
+    void refreshItems() {
+        // Load items
+        // ...
+
+        switch(mSection)
+        {
+            case 0: //Ja-Gott-Heute
+                new JaGottHeute().execute();
+                break;
+            case 1:
+                new JaGottArchiv().execute();
+                break;
+            default:
+                //doNothing
+        }
+
+        // Load complete
+        onItemsLoadComplete();
+    }
+
+    void onItemsLoadComplete() {
+        // Update the adapter and notify data set changed
+        // ...
+
+        // Stop refresh animation
+        mSwipeRefreshLayout.setRefreshing(false);
     }
 
     private void setUpNavDrawer() {
@@ -154,6 +194,8 @@ public class JaGottMain extends AppCompatActivity
 
                         mImageHeaderView.setImageResource(R.drawable.image_heute2);
                         new JaGottHeute().execute();
+                        mSection = 0;
+                        mSwipeRefreshLayout.setEnabled(true);
                         //mCurrentSelectedPosition = 0;
                         break;
                     case R.id.title_section2:
@@ -161,6 +203,8 @@ public class JaGottMain extends AppCompatActivity
                         setTitle(R.string.title_section2);
                         mImageHeaderView.setImageResource(R.drawable.header_image_1);
                         new JaGottArchiv().execute();
+                        mSection = 1;
+                        mSwipeRefreshLayout.setEnabled(true);
                         //mCurrentSelectedPosition = 1;
                         break;
                     case R.id.title_section3:
@@ -181,6 +225,8 @@ public class JaGottMain extends AppCompatActivity
                         JgtKontaktRVAdapter kontaktAdapter = new JgtKontaktRVAdapter(kontakte);
                         rv.setAdapter(kontaktAdapter);
                         //mCurrentSelectedPosition = 0;
+                        mSection = 2;
+                        mSwipeRefreshLayout.setEnabled(false);
                         break;
                     case R.id.title_section4:
                         //this lines are needed to prevent title from vanishing when toolbar collapses
@@ -196,6 +242,8 @@ public class JaGottMain extends AppCompatActivity
                         //Execute Alarm Handler
                         mAlarmHandler.executeJaGottAlarm();
                         //mCurrentSelectedPosition = 1;
+                        mSection = 3;
+                        mSwipeRefreshLayout.setEnabled(false);
                         break;
                     case R.id.title_section5:
                         fab = (FloatingActionButton) findViewById(R.id.fab);
@@ -231,6 +279,8 @@ public class JaGottMain extends AppCompatActivity
                         JgtFavoritesRVAdapter favoritesAdapter = new JgtFavoritesRVAdapter(archivList);
                         rv.setAdapter(favoritesAdapter);
                         //mCurrentSelectedPosition = 0;
+                        mSection = 4;
+                        mSwipeRefreshLayout.setEnabled(false);
                         break;
 
                     default:
