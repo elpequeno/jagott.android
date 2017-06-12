@@ -6,7 +6,6 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.CoordinatorLayout;
@@ -19,16 +18,16 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.util.TypedValue;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.MotionEvent;
+import android.view.ScaleGestureDetector;
 import android.view.View;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -37,8 +36,7 @@ import java.util.ArrayList;
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 
-public class JaGottMain extends AppCompatActivity
-        implements SwipeRefreshLayout.OnRefreshListener {
+public class JaGottMain extends AppCompatActivity {
 
     CollapsingToolbarLayout mCollapsingToolbar;
     @InjectView(R.id.drawer_layout)
@@ -58,23 +56,27 @@ public class JaGottMain extends AppCompatActivity
     ButtonHandler mButtonHandler;
     Button mBtnBigger;
     Button mBtnSmaller;
-    Button mBtnBack;
     Integer mTextSize;
 
     //AlarmHandler für die Erinnerungsfunktion
     AlarmHandler mAlarmHandler;
 
-    //Archiv Liste
-    ListView mArchivListView;
-    SwipeRefreshLayout swipeLayout;
-
     int mSection;
+
+    ScaleGestureDetector scaleGestureDetector;
+    TextView date;
+    TextView verse;
+    TextView message;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        TypefaceUtil.overrideFont(getApplicationContext(), "SERIF", "fonts/Roboto-Regular.ttf"); // font from assets: "assets/fonts/Roboto-Regular.ttf
+
         // Make sure this is before calling super.onCreate
         setTheme(R.style.JaGottLight);
         super.onCreate(savedInstanceState);
+
+
 
         setContentView(R.layout.jgt_main_activity);
 
@@ -109,12 +111,38 @@ public class JaGottMain extends AppCompatActivity
         });
         mSection = 0;
 
+        date = (TextView) findViewById(R.id.dateView);
+        verse = (TextView) findViewById(R.id.verseView);
+        message = (TextView) findViewById(R.id.messageView);
+
+        scaleGestureDetector = new ScaleGestureDetector(this, new ScaleGestureDetector.SimpleOnScaleGestureListener(){
+
+            @Override
+            public boolean onScale(ScaleGestureDetector detector) {
+                float size = date.getTextSize();
+                float factor = detector.getScaleFactor();
+
+                float product = size*factor;
+                date.setTextSize(TypedValue.COMPLEX_UNIT_PX, product);
+                verse.setTextSize(TypedValue.COMPLEX_UNIT_PX, product);
+                message.setTextSize(TypedValue.COMPLEX_UNIT_PX, product);
+
+                return true;
+            }
+        });
+
         //this lines are needed to prevent title from vanishing when toolbar collapses
         setTitle(R.string.title_section1);
         new JaGottHeute().execute();
 
         // Set up the drawer.
         setUpNavDrawer();
+    }
+
+    @Override
+    public boolean onTouchEvent(MotionEvent event) {
+        scaleGestureDetector.onTouchEvent(event);
+        return true;
     }
 
     private void initializeGUI() {
@@ -134,6 +162,7 @@ public class JaGottMain extends AppCompatActivity
     void refreshItems() {
         // Load items
         // ...
+        initializeGUI();
 
         switch(mSection)
         {
@@ -162,7 +191,7 @@ public class JaGottMain extends AppCompatActivity
     private void setUpNavDrawer() {
         if (mToolbar != null) {
             //getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-            mToolbar.setNavigationIcon(R.drawable.ic_drawer_light);
+            mToolbar.setNavigationIcon(R.mipmap.ic_drawer);
             mToolbar.setNavigationOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -179,18 +208,19 @@ public class JaGottMain extends AppCompatActivity
                 CoordinatorLayout.LayoutParams p;
 
                 menuItem.setChecked(true);
+
+                //hide Floating action button
+                fab = (FloatingActionButton) findViewById(R.id.fab);
+                p = (CoordinatorLayout.LayoutParams) fab.getLayoutParams();
+                p.setAnchorId(R.id.container);
+                fab.setLayoutParams(p);
+                fab.setVisibility(View.GONE);
+
                 switch (menuItem.getItemId()) {
                     case R.id.title_section1:
                         initializeGUI();
                         //this lines are needed to prevent title from vanishing when toolbar collapses
                         setTitle(R.string.title_section1);
-
-                        //hide Floating action button
-                        fab = (FloatingActionButton) findViewById(R.id.fab);
-                        p = (CoordinatorLayout.LayoutParams) fab.getLayoutParams();
-                        p.setAnchorId(R.id.container);
-                        fab.setLayoutParams(p);
-                        fab.setVisibility(View.GONE);
 
                         mImageHeaderView.setImageResource(R.drawable.image_heute2);
                         new JaGottHeute().execute();
@@ -200,18 +230,19 @@ public class JaGottMain extends AppCompatActivity
                         break;
                     case R.id.title_section2:
                         //this lines are needed to prevent title from vanishing when toolbar collapses
+                        initializeGUI(); //um "Laden"-Text anzuzeigen
                         setTitle(R.string.title_section2);
-                        mImageHeaderView.setImageResource(R.drawable.header_image_1);
+
+                        mImageHeaderView.setImageResource(R.drawable.coffee);
                         new JaGottArchiv().execute();
                         mSection = 1;
                         mSwipeRefreshLayout.setEnabled(true);
                         //mCurrentSelectedPosition = 1;
                         break;
                     case R.id.title_section3:
-                        //this lines are needed to prevent title from vanishing when toolbar collapses
                         setTitle(R.string.title_section3);
                         mImageHeaderView.setImageResource(R.drawable.header_image_2);
-                        ArrayList<KontaktData> kontakte = new ArrayList<KontaktData>();
+                        ArrayList<KontaktData> kontakte = new ArrayList<>();
                         kontakte.add(new KontaktData("Habt ihr Fragen oder Anregungen?", "Dann schreibt uns doch eine Mail!", R.drawable.ic_launcher)); //ic_empty
                         kontakte.add(new KontaktData("Michael Bayer", "michael@ja-gott.de", R.drawable.ic_michael));
                         kontakte.add(new KontaktData("Lena Vach", "lena@ja-gott.de", R.drawable.ic_lena));
@@ -231,6 +262,7 @@ public class JaGottMain extends AppCompatActivity
                     case R.id.title_section4:
                         //this lines are needed to prevent title from vanishing when toolbar collapses
                         setTitle(R.string.title_section4);
+                        mImageHeaderView.setImageResource(R.drawable.clock);
 
                         //Set Adapter for Alarm
                         rv = (RecyclerView) findViewById(R.id.container);
@@ -262,13 +294,11 @@ public class JaGottMain extends AppCompatActivity
                         cursor.moveToFirst();
 
                         ArrayList<String> archivList = new ArrayList<>();
-                        ArrayList<String> archivDateList = new ArrayList<>();
 
                         try {
                             do {
                                 String name = cursor.getString(1);
                                 archivList.add(name);
-                                archivDateList.add(cursor.getString(2));
                             } while (cursor.moveToNext());
                         } catch (Exception e) {
                             archivList.add("Du hast bisher keine Liebligstexte gespeichert.");
@@ -403,19 +433,6 @@ public class JaGottMain extends AppCompatActivity
         return super.onOptionsItemSelected(item);
     }
 
-    @Override
-    public void onRefresh() {
-        JaGottParser parser = new JaGottParser();
-        parser.refreshJaGottHeute();
-        parser.refreshJaGottArchiv();
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                swipeLayout.setRefreshing(false);
-            }
-        }, 5000);
-    }
-
     private class ButtonHandler implements View.OnClickListener {
 
         public void onClick(View v) {
@@ -429,8 +446,6 @@ public class JaGottMain extends AppCompatActivity
                     mTextSize -= 2;
                 }
                 setTextViewSize();
-            } else if (v == mBtnBack) {
-                //Button_Back brings user back to fav list
             }
         }
 
@@ -467,35 +482,7 @@ public class JaGottMain extends AppCompatActivity
 
         @Override
         protected void onPostExecute(String result) {
-            try {
-                //mBtnBigger = (Button) findViewById(R.id.btnBigger);
-                //mBtnBigger.setOnClickListener(mButtonHandler);
-
-                //mBtnSmaller = (Button) findViewById(R.id.btnSmaller);
-                //mBtnSmaller.setOnClickListener(mButtonHandler);
-
-                new JaGottParser().refreshJaGottHeute();
-                //mButtonHandler.setTextViewSize();
-
-                //swipeLayout = (SwipeRefreshLayout) findViewById(R.id.swipe_container);
-                //swipeLayout.setOnRefreshListener(Global.GlobalMainActivity);
-
-                //mImage = (ImageView) findViewById(R.id.image_heute_view);
-                //ScrollView sv = (ScrollView) findViewById(R.id.ScrollView01);
-
-                //sv.getViewTreeObserver().addOnScrollChangedListener(new OnScrollChangedListener() {
-
-                //    @Override
-                //    public void onScrollChanged() {
-
-                //       parallax(mImage);
-                //DO SOMETHING WITH THE SCROLL COORDINATES
-
-                //   }
-                //});
-            } catch (Exception e) {
-            }
-
+            new JaGottParser().refreshJaGottHeute();
         }
     }
 
@@ -522,68 +509,6 @@ public class JaGottMain extends AppCompatActivity
 //                archivLink.setText(Html.fromHtml("<a href=\"http://ja-gott.de/index.php/ja-gott-heute/ja-gott-archiv\">Hier geht's zum Archiv!  </a>"));
 //                archivLink.setMovementMethod(LinkMovementMethod.getInstance());
 //            }
-        }
-    }
-
-
-    private class JaGottFavorite extends AsyncTask<String, Void, String> {
-
-        @Override
-        protected String doInBackground(String... strings) {
-
-            return "";//JaGottParser.parseJaGottOnline();
-        }
-
-        @Override
-        protected void onPostExecute(String result) {
-            DBAdapter db = new DBAdapter(Global.GlobalMainActivity);
-            db.open();
-
-            Cursor cursor = db.getAllRecords();
-            cursor.moveToFirst();
-
-            ArrayList<String> archivList = new ArrayList<>();
-            ArrayList<String> archivDateList = new ArrayList<>();
-
-            try {
-                do {
-                    String name = cursor.getString(1);
-                    archivList.add(name);
-                    archivDateList.add(cursor.getString(2));
-                } while (cursor.moveToNext());
-
-                //convert ArrayLit to String[] for CustomListArrayAdapter
-                String[] archiveStringlist = new String[archivList.size()];
-                archiveStringlist = archivList.toArray(archiveStringlist);
-
-                String[] archiveDateStringlist = new String[archivDateList.size()];
-                archiveDateStringlist = archivDateList.toArray(archiveDateStringlist);
-
-                mArchivListView = (ListView) findViewById(R.id.favorite_list);
-                final CustomListArrayAdapter arrayAdapter = new CustomListArrayAdapter(Global.GlobalMainActivity,
-                        archiveStringlist, archiveDateStringlist);
-                mArchivListView.setAdapter(arrayAdapter);
-
-                mArchivListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-
-                    @Override
-                    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                        try {
-                            TextView listItemText = (TextView) view.findViewById(R.id.listItemText);
-                            listItemText.performClick();
-                        } catch (Exception e) {
-                            //do nothing
-                        }
-                    }
-                });
-            } catch (Exception e) {
-                archivList.add("Du hast bisher keine Liebligstexte gespeichert.");
-                mArchivListView = (ListView) findViewById(R.id.favorite_list);
-                ArrayAdapter<String> arrayAdapter = new ArrayAdapter<>(
-                        Global.GlobalMainActivity,
-                        android.R.layout.simple_list_item_1, archivList);
-                mArchivListView.setAdapter(arrayAdapter);
-            }
         }
     }
 }

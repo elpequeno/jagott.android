@@ -31,8 +31,10 @@ public class JgtKontaktRVAdapter extends RecyclerView.Adapter<JgtKontaktRVAdapte
         TextView mail;
         ImageView image;
 
+
         JgtKontaktViewHolder(View itemView) {
             super(itemView);
+
             cv = (CardView)itemView.findViewById(R.id.cv);
             cv.setCardBackgroundColor(Color.LTGRAY);
             image = (ImageView)itemView.findViewById(R.id.image);

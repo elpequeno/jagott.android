@@ -6,6 +6,5 @@
         android:icon="@drawable/ic_share" />
     <item android:id="@+id/action_save"
         android:title="@string/action_save"
-        android:icon="@drawable/ic_fav"
-        android:showAsAction="never"/>
+        android:icon="@mipmap/ic_jgt_fav"/>
 </menu>

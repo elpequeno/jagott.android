@@ -1,13 +1,12 @@
 package de.huerse.jagott;
 
 import android.content.res.Resources;
-import android.graphics.Color;
-import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.NumberPicker;
 import android.widget.TextView;
 import android.widget.TimePicker;
@@ -21,8 +20,7 @@ public class JgtAlarmRVAdapter extends RecyclerView.Adapter<JgtAlarmRVAdapter.Jg
     }
 
     public static class JgtAlarmViewHolder extends RecyclerView.ViewHolder {
-        CardView cv;
-        TextView infoView;
+        LinearLayout ll;
         TextView alarmInfoView;
         Button alarmSetButton;
         Button alarmCancleButton;
@@ -30,9 +28,8 @@ public class JgtAlarmRVAdapter extends RecyclerView.Adapter<JgtAlarmRVAdapter.Jg
 
         JgtAlarmViewHolder(View itemView) {
             super(itemView);
-            cv = (CardView)itemView.findViewById(R.id.cv);
-            cv.setCardBackgroundColor(Color.LTGRAY);
-            infoView = (TextView)itemView.findViewById(R.id.infoView);
+            ll = (LinearLayout)itemView.findViewById(R.id.ll);
+            //ll.setBackgroundColor(Color.LTGRAY);
             alarmInfoView = (TextView)itemView.findViewById(R.id.alarmInfo);
             alarmSetButton = (Button)itemView.findViewById(R.id.alarmSetButton);
             alarmCancleButton = (Button)itemView.findViewById(R.id.alarmCancleButton);
@@ -54,13 +51,8 @@ public class JgtAlarmRVAdapter extends RecyclerView.Adapter<JgtAlarmRVAdapter.Jg
 
     @Override
     public void onBindViewHolder(JgtAlarmViewHolder jgtAlarmViewHolder, int i) {
-        jgtAlarmViewHolder.infoView.setText("Möchtest du erinnert werden Ja-Gott zu lesen?");
-        jgtAlarmViewHolder.infoView.setTextColor(Global.GlobalMainActivity.getResources().getColor(R.color.black));
         jgtAlarmViewHolder.alarmInfoView.setText("Keine Erinnerung eingestellt!");
-        jgtAlarmViewHolder.infoView.setTextColor(Global.GlobalMainActivity.getResources().getColor(R.color.black));
         set_timepicker_text_color(jgtAlarmViewHolder);
-        jgtAlarmViewHolder.alarmSetButton.setTextColor(Global.GlobalMainActivity.getResources().getColor(R.color.white));
-        jgtAlarmViewHolder.alarmCancleButton.setTextColor(Global.GlobalMainActivity.getResources().getColor(R.color.white));
     }
 
 

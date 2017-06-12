@@ -44,7 +44,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="?attr/actionBarSize"
                     app:layout_collapseMode="pin"
-                    app:popupTheme="@style/ThemeOverlay.AppCompat.Light" />
+                    app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
+                    android:elevation="4dp"/>
             </android.support.design.widget.CollapsingToolbarLayout>
         </android.support.design.widget.AppBarLayout>
         <!-- Main Content -->
@@ -70,7 +71,7 @@
             android:layout_margin="20dp"
             android:clickable="true"
             android:src="@drawable/ic_share"
-            app:layout_anchor="@+id/container"
+            app:layout_anchor="@+id/appbar"
             app:layout_anchorGravity="bottom|right|end" />
     </android.support.design.widget.CoordinatorLayout>
 
@@ -80,5 +81,7 @@
         android:layout_height="match_parent"
         android:layout_gravity="start"
         app:headerLayout="@layout/drawer_header"
-        app:menu="@menu/action_menu" />
+        app:menu="@menu/action_menu"
+        app:itemTextColor="@color/text_primary_dark"
+        android:background="@color/primary_50"/>
 </android.support.v4.widget.DrawerLayout>

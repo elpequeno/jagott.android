@@ -1,77 +1,53 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent" android:layout_height="match_parent"
-    android:layout_marginLeft="10dp"
-    android:layout_marginRight="10dp"
-    android:layout_marginTop="5dp"
-    >
+    android:id="@+id/ll"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@color/primary_50">
 
-    <android.support.v7.widget.CardView
-        android:layout_width="match_parent"
+    <TimePicker
+        android:id="@+id/alarmTimePicker"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/cv"
-        >
+        android:layout_centerHorizontal="true"
+        android:headerBackground="@color/primary_300"
+        android:numbersBackgroundColor="@color/primary_100" />
 
-        <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-            xmlns:tools="http://schemas.android.com/tools"
+    <TextView
+        android:id="@+id/alarmInfo"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/alarmTimePicker"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="20dp"
+        android:layout_marginLeft="20dp"
+        android:allowUndo="false"
+        android:text="Keine Erinnerung eingestellt!" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/alarmCancleButton"
+            style="@style/Widget.AppCompat.Button.Borderless"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:text="Erinnerung abbrechen"
+            android:textColor="@color/primary_A200"/>
+
+        <Button
+            android:id="@+id/alarmSetButton"
+            style="@style/Widget.AppCompat.Button.Borderless"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:paddingLeft="@dimen/activity_horizontal_margin"
-            android:paddingRight="@dimen/activity_horizontal_margin"
-            android:paddingTop="@dimen/activity_vertical_margin"
-            android:paddingBottom="@dimen/activity_vertical_margin"
-            tools:context="de.huerse.jagott.MainActivity$PlaceholderFragment"
-            android:background="@color/primary_50">
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:text="Erinnere mich!"
+            android:textColor="@color/primary_A200"/>
+    </LinearLayout>
 
-            <TextView
-                android:id="@+id/infoView"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentLeft="true"
-                android:layout_marginLeft="5dp"
-                android:layout_marginRight="10dp"
-                android:text="Möchtest du erinnert werden Ja-Gott zu lesen?" />
-
-            <TimePicker
-                android:id="@+id/alarmTimePicker"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerHorizontal="true"
-                android:layout_marginTop="30dp"
-                android:numbersBackgroundColor="@color/primary_100"
-                android:headerBackground="@color/primary_100"/>
-
-            <TextView
-                android:id="@+id/alarmInfo"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/alarmTimePicker"
-                android:layout_centerHorizontal="true"
-                android:layout_marginTop="20dp"
-                android:text="Keine Erinnerung eingestellt!"
-                android:allowUndo="false" />
-
-            <Button
-                android:id="@+id/alarmSetButton"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Erinnere mich!"
-                android:layout_below="@id/alarmInfo"
-                android:layout_centerHorizontal="true"
-                android:layout_marginTop="20dp" />
-
-
-            <Button
-                android:id="@+id/alarmCancleButton"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Erinnerung abbrechen"
-                android:layout_below="@id/alarmSetButton"
-                android:layout_centerHorizontal="true"
-                android:layout_marginTop="20dp" />
-
-        </RelativeLayout>
-
-    </android.support.v7.widget.CardView>
 
 </LinearLayout>

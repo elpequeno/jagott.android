@@ -17,9 +17,8 @@
         android:layout_height="wrap_content"
         android:layout_marginLeft="72dp"
         android:layout_gravity="center_vertical"
-        android:textColor="@color/white"
         android:textAppearance="?android:attr/textAppearanceMedium"
-        android:singleLine="true"
+        android:maxLines="1"
         android:id="@+id/drawer_row_text"/>
 
 </FrameLayout>

@@ -2,18 +2,18 @@
     <group android:checkableBehavior="single">
         <item android:id="@+id/title_section1"
             android:title="@string/title_section1"
-            android:icon="@drawable/ic_action_today"/>
+            android:icon="@mipmap/ic_jgt_heute"/>
         <item android:id="@+id/title_section2"
             android:title="@string/title_section2"
-            android:icon="@drawable/ic_action_collection"/>
+            android:icon="@mipmap/ic_jgt_archive"/>
         <item android:id="@+id/title_section3"
             android:title="@string/title_section3"
-            android:icon="@drawable/ic_action_group"/>
+            android:icon="@mipmap/ic_jgt_team"/>
         <item android:id="@+id/title_section4"
             android:title="@string/title_section4"
-            android:icon="@drawable/ic_action_alarms"/>
+            android:icon="@mipmap/ic_jgt_alarm"/>
         <item android:id="@+id/title_section5"
             android:title="@string/title_section5"
-            android:icon="@drawable/ic_fav"/>
+            android:icon="@mipmap/ic_jgt_fav" />
     </group>
 </menu>
