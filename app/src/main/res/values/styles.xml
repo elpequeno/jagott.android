@@ -5,7 +5,9 @@
         <item name="android:windowBackground">@drawable/splash_screen</item>
     </style>
 
-    <style name="JaGottLight" parent="Theme.AppCompat.NoActionBar">
+    <style name="JaGottLight" parent="Theme.AppCompat.Light.NoActionBar">
+
+        <item name="android:typeface">serif</item>
         <!-- colorPrimary is used for the default action bar background -->
 
         <!-- colorPrimaryDark is used for the status bar -->
@@ -18,5 +20,9 @@
         <item name="colorAccent">@color/primary_A400</item>
 
         <item name="android:textColor">@color/text_primary_dark</item>
+    </style>
+
+    <style name="HeaderTitleStyle" parent="@android:style/TextAppearance">
+        <item name="android:textSize">25sp</item>
     </style>
 </resources>

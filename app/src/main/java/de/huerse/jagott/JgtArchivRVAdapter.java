@@ -1,11 +1,10 @@
 package de.huerse.jagott;
 
-import android.graphics.Color;
-import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import java.util.List;
@@ -22,14 +21,14 @@ public class JgtArchivRVAdapter extends RecyclerView.Adapter<JgtArchivRVAdapter.
     }
 
     public static class JgtArchivViewHolder extends RecyclerView.ViewHolder {
-        CardView cv;
+        RelativeLayout rl;
         TextView titleView;
 
 
         JgtArchivViewHolder(View itemView) {
             super(itemView);
-            cv = (CardView)itemView.findViewById(R.id.cv);
-            cv.setCardBackgroundColor(Color.LTGRAY);
+            rl = (RelativeLayout) itemView.findViewById(R.id.rl);
+            //rl.setBackgroundColor(Color.LTGRAY);
             titleView = (TextView)itemView.findViewById(R.id.titleView);
         }
     }
@@ -42,8 +41,7 @@ public class JgtArchivRVAdapter extends RecyclerView.Adapter<JgtArchivRVAdapter.
     @Override
     public JgtArchivViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
         View v = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.jgt_archiv_card, viewGroup, false);
-        JgtArchivViewHolder jgtvh = new JgtArchivViewHolder(v);
-        return jgtvh;
+        return new JgtArchivViewHolder(v);
     }
 
     @Override

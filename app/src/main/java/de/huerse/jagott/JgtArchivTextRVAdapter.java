@@ -40,8 +40,7 @@ public class JgtArchivTextRVAdapter extends RecyclerView.Adapter<JgtArchivTextRV
     @Override
     public JgtArchivTextViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
         View v = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.jgt_heute, viewGroup, false);
-        JgtArchivTextViewHolder jgtvh = new JgtArchivTextViewHolder(v);
-        return jgtvh;
+        return new JgtArchivTextViewHolder(v);
     }
 
     @Override
