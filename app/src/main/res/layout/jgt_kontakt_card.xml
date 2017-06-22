@@ -47,9 +47,14 @@
                     android:id="@+id/mail"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textColorLink="@color/orange_light"
-                    android:text="info@ja-gott.de\n\n"
-                    android:layout_toRightOf="@+id/image" />
+                    android:textColorLink="@color/primary_A700"
+                    android:text="info@ja-gott.de\n\n" />
+
+                <TextView
+                    android:id="@+id/about"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="\nmehr..."/>
 
             </LinearLayout>
 

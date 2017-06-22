@@ -18,11 +18,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.util.TypedValue;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.MotionEvent;
-import android.view.ScaleGestureDetector;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -35,6 +32,11 @@ import java.util.ArrayList;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
+import de.huerse.jagott.Adapters.JgtAlarmRVAdapter;
+import de.huerse.jagott.Adapters.JgtFavoritesRVAdapter;
+import de.huerse.jagott.Adapters.JgtHeuteRVAdapter;
+import de.huerse.jagott.Adapters.JgtKontaktRVAdapter;
+import de.huerse.jagott.alarm.AlarmHandler;
 
 public class JaGottMain extends AppCompatActivity {
 
@@ -63,7 +65,6 @@ public class JaGottMain extends AppCompatActivity {
 
     int mSection;
 
-    ScaleGestureDetector scaleGestureDetector;
     TextView date;
     TextView verse;
     TextView message;
@@ -76,12 +77,8 @@ public class JaGottMain extends AppCompatActivity {
         setTheme(R.style.JaGottLight);
         super.onCreate(savedInstanceState);
 
-
-
         setContentView(R.layout.jgt_main_activity);
-
         ButterKnife.inject(this);
-
         Global.GlobalMainActivity = this;   //MainActivity in globaler Variable merken, um inn gesamter App darauf zugreifen zu können... schlechter Stil... naja
 
         setSupportActionBar(mToolbar);
@@ -115,34 +112,12 @@ public class JaGottMain extends AppCompatActivity {
         verse = (TextView) findViewById(R.id.verseView);
         message = (TextView) findViewById(R.id.messageView);
 
-        scaleGestureDetector = new ScaleGestureDetector(this, new ScaleGestureDetector.SimpleOnScaleGestureListener(){
-
-            @Override
-            public boolean onScale(ScaleGestureDetector detector) {
-                float size = date.getTextSize();
-                float factor = detector.getScaleFactor();
-
-                float product = size*factor;
-                date.setTextSize(TypedValue.COMPLEX_UNIT_PX, product);
-                verse.setTextSize(TypedValue.COMPLEX_UNIT_PX, product);
-                message.setTextSize(TypedValue.COMPLEX_UNIT_PX, product);
-
-                return true;
-            }
-        });
-
         //this lines are needed to prevent title from vanishing when toolbar collapses
         setTitle(R.string.title_section1);
         new JaGottHeute().execute();
 
         // Set up the drawer.
         setUpNavDrawer();
-    }
-
-    @Override
-    public boolean onTouchEvent(MotionEvent event) {
-        scaleGestureDetector.onTouchEvent(event);
-        return true;
     }
 
     private void initializeGUI() {
@@ -241,23 +216,10 @@ public class JaGottMain extends AppCompatActivity {
                         break;
                     case R.id.title_section3:
                         setTitle(R.string.title_section3);
-                        mImageHeaderView.setImageResource(R.drawable.header_image_2);
-                        ArrayList<KontaktData> kontakte = new ArrayList<>();
-                        kontakte.add(new KontaktData("Habt ihr Fragen oder Anregungen?", "Dann schreibt uns doch eine Mail!", R.drawable.ic_launcher)); //ic_empty
-                        kontakte.add(new KontaktData("Michael Bayer", "michael@ja-gott.de", R.drawable.ic_michael));
-                        kontakte.add(new KontaktData("Lena Vach", "lena@ja-gott.de", R.drawable.ic_lena));
-                        kontakte.add(new KontaktData("Carina Pfeiffer", "carina@ja-gott.de", R.drawable.ic_carina));
-                        kontakte.add(new KontaktData("Kerstin Penner", "kerstin@ja-gott.de", R.drawable.ic_kerstin));
-                        kontakte.add(new KontaktData("André Klein", "andre@ja-gott.de", R.drawable.andre));
-                        kontakte.add(new KontaktData("Martin Forell", "matin@ja-gott.de", R.drawable.ic_launcher));
+                        mImageHeaderView.setImageResource(R.drawable.image_team);
+                        initializeGUI(); //um "Laden"-Text anzuzeigen
 
-                        rv = (RecyclerView) findViewById(R.id.container);
-
-                        JgtKontaktRVAdapter kontaktAdapter = new JgtKontaktRVAdapter(kontakte);
-                        rv.setAdapter(kontaktAdapter);
-                        //mCurrentSelectedPosition = 0;
-                        mSection = 2;
-                        mSwipeRefreshLayout.setEnabled(false);
+                        new JaGottTeam().execute();
                         break;
                     case R.id.title_section4:
                         //this lines are needed to prevent title from vanishing when toolbar collapses
@@ -269,7 +231,6 @@ public class JaGottMain extends AppCompatActivity {
 
                         JgtAlarmRVAdapter alarmAdapter = new JgtAlarmRVAdapter();
                         rv.setAdapter(alarmAdapter);
-
 
                         //Execute Alarm Handler
                         mAlarmHandler.executeJaGottAlarm();
@@ -308,7 +269,7 @@ public class JaGottMain extends AppCompatActivity {
 
                         JgtFavoritesRVAdapter favoritesAdapter = new JgtFavoritesRVAdapter(archivList);
                         rv.setAdapter(favoritesAdapter);
-                        //mCurrentSelectedPosition = 0;
+
                         mSection = 4;
                         mSwipeRefreshLayout.setEnabled(false);
                         break;
@@ -363,9 +324,9 @@ public class JaGottMain extends AppCompatActivity {
             LinearLayout layout = new LinearLayout(this);
             layout.setOrientation(LinearLayout.VERTICAL);
 
-            final EditText name = new EditText(this);
-            name.setHint("Gebe einen Titel ein.");
-            layout.addView(name);
+            //final EditText name = new EditText(this);
+            //name.setHint("Gebe einen Titel ein.");
+            //layout.addView(name);
 
             final EditText note = new EditText(this);
             note.setHint("Füge eine Notiz hinzu.");
@@ -379,11 +340,17 @@ public class JaGottMain extends AppCompatActivity {
                     DBAdapter db = new DBAdapter(Global.GlobalMainActivity);
                     db.open();
 
-                    String save_name = name.getText().toString();
-                    if (save_name.isEmpty()) {
-                        save_name = Global.GlobalJaGottCurrentDate;
+                    //String save_name = name.getText().toString();
+                    //if (save_name.isEmpty()) {
+                        //save_name = Global.GlobalJaGottCurrentDate;
+                    //}
+
+                    String mynote = note.getText().toString();
+                    if (mynote.isEmpty()) {
+                        mynote = "-";
                     }
 
+                    String save_name = Global.GlobalJaGottCurrentDate;
                     long record_id = -1;
                     Cursor cur = db.getRecord(save_name);
                     if (cur.getCount() == 0) {
@@ -391,7 +358,7 @@ public class JaGottMain extends AppCompatActivity {
                                 Global.GlobalJaGottCurrentDate,
                                 Global.GlobalJaGottCurrentVerse,
                                 Global.GlobalJaGottCurrentMessage,
-                                note.getText().toString());
+                                mynote);
                     }
                     db.close();
 
@@ -472,11 +439,10 @@ public class JaGottMain extends AppCompatActivity {
     /**
      * AsyncClass to load GUI for JaGottHeute
      */
-    public class JaGottHeute extends AsyncTask<String, Void, String> {
+    private class JaGottHeute extends AsyncTask<String, Void, String> {
 
         @Override
         protected String doInBackground(String... strings) {
-
             return "";
         }
 
@@ -509,6 +475,42 @@ public class JaGottMain extends AppCompatActivity {
 //                archivLink.setText(Html.fromHtml("<a href=\"http://ja-gott.de/index.php/ja-gott-heute/ja-gott-archiv\">Hier geht's zum Archiv!  </a>"));
 //                archivLink.setMovementMethod(LinkMovementMethod.getInstance());
 //            }
+        }
+    }
+
+    /**
+     * AsyncClass to load GUI for JaGottTeam
+     */
+    private class JaGottTeam extends AsyncTask<String, Void, String> {
+
+        @Override
+        protected String doInBackground(String... strings) {
+
+            return "";//JaGottParser.parseJaGottOnline();
+        }
+
+        @Override
+        protected void onPostExecute(String result) {
+            ArrayList<KontaktData> kontakte = new ArrayList<>();
+            kontakte.add(new KontaktData("Habt ihr Fragen oder Anregungen?", "\nDann schreibt uns doch eine Mail!", R.drawable.ic_launcher,"", "")); //ic_empty
+            kontakte.add(new KontaktData("Michael Bayer", "michael@ja-gott.de", R.drawable.michael, "Author", KontaktData.aboutMichael));
+            kontakte.add(new KontaktData("Lena Vach", "lena@ja-gott.de", R.drawable.lena, "Authorin", KontaktData.aboutLena));
+            kontakte.add(new KontaktData("Carina Pfeiffer", "carina@ja-gott.de", R.drawable.carina, "Authorin", KontaktData.aboutCarina));
+            kontakte.add(new KontaktData("Kerstin Penner", "kerstin@ja-gott.de", R.drawable.kerstin, "Authorin", KontaktData.aboutKerstin));
+            kontakte.add(new KontaktData("Eva Dorothée Kurrer", "eva@ja-gott.de", R.drawable.eva, "Authorin", KontaktData.aboutEva));
+            kontakte.add(new KontaktData("Marcel Meaubert", "marcel@ja-gott.de", R.drawable.marcel, "Author", KontaktData.aboutMarcel));
+            kontakte.add(new KontaktData("Alexander Blümel", "alexander@ja-gott.de", R.drawable.martin, "Author", KontaktData.aboutAlexander));
+            kontakte.add(new KontaktData("André Klein", "andre@ja-gott.de", R.drawable.andre, "Technik", KontaktData.aboutAndre));
+            kontakte.add(new KontaktData("Martin Forell", "martin@ja-gott.de", R.drawable.martin, "Technik", KontaktData.aboutMartin));
+
+
+            RecyclerView rv = (RecyclerView) findViewById(R.id.container);
+
+            JgtKontaktRVAdapter kontaktAdapter = new JgtKontaktRVAdapter(kontakte);
+            rv.setAdapter(kontaktAdapter);
+            //mCurrentSelectedPosition = 0;
+            mSection = 2;
+            mSwipeRefreshLayout.setEnabled(false);
         }
     }
 }

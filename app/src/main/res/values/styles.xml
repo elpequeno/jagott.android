@@ -15,6 +15,8 @@
 
         <item name="colorPrimaryDark">@color/primary_700</item>
 
+        <item name="android:windowTranslucentStatus">true</item>
+
         <!-- colorAccent is used as the default value for colorControlActivated,
              which is used to tint widgets -->
         <item name="colorAccent">@color/primary_A400</item>
@@ -23,6 +25,11 @@
     </style>
 
     <style name="HeaderTitleStyle" parent="@android:style/TextAppearance">
-        <item name="android:textSize">25sp</item>
+        <item name="android:textSize">30dp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:shadowColor">#000000</item>
+        <item name="android:shadowDx">1</item>
+        <item name="android:shadowDy">1</item>
+        <item name="android:shadowRadius">5</item>
     </style>
 </resources>

@@ -1,26 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+android:layout_width="match_parent" android:layout_height="wrap_content">
+
+<RelativeLayout
     android:layout_width="match_parent"
-    android:layout_height="match_parent" >
+    android:layout_height="wrap_content"
+    android:padding="10dp"
+    android:background="@color/primary_50"
+    android:id="@+id/rl">
 
     <TextView
         android:layout_width="match_parent"
         android:layout_height="25dp"
         android:layout_margin="5dp"
-        android:textSize="20dp"
-        android:text="-"
         android:id="@+id/listItemText"
         android:gravity="center_vertical"/>
-
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="25dp"
-        android:layout_margin="5dp"
-        android:layout_below="@+id/listItemText"
-        android:textSize="15dp"
-        android:text="-"
-        android:id="@+id/listItemDate"
-        android:gravity="center_vertical"/>
-
 </RelativeLayout>
+
+</LinearLayout>

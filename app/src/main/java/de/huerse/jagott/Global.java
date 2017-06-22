@@ -5,7 +5,7 @@ package de.huerse.jagott;
  */
 public class Global {
     //public static String GlobalJaGottHeuteText = "";
-    public static String GlobalJaGottCurrentText = "";
+    static String GlobalJaGottCurrentText = "";
     public static String GlobalJaGottCurrentDate = "";
     public static String GlobalJaGottCurrentVerse = "";
     public static String GlobalJaGottCurrentMessage = "";

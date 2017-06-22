@@ -23,14 +23,17 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 
+import de.huerse.jagott.Adapters.JgtArchivRVAdapter;
+import de.huerse.jagott.Adapters.JgtHeuteRVAdapter;
+
 public class JaGottParser {
 
     //Variables for Database request for todays text
     private String jsonResult = "empty";
 
-    ArrayList<NameValuePair> mNameValuePairs = new ArrayList<>();
+    private ArrayList<NameValuePair> mNameValuePairs = new ArrayList<>();
 
-    public void ParseAndDisplayJaGottHeute(String jsonResult) {
+    private void ParseAndDisplayJaGottHeute(String jsonResult) {
 
         try {
             JSONObject jsonResponse = new JSONObject(jsonResult);
@@ -59,7 +62,7 @@ public class JaGottParser {
                 ArrayList<String> jgtHeuteResult = new ArrayList<>();
                 jgtHeuteResult.add(0,Global.GlobalJaGottCurrentDate );
                 jgtHeuteResult.add(1,Global.GlobalJaGottCurrentVerse );
-                jgtHeuteResult.add(2,Global.GlobalJaGottCurrentMessage + "\n\n\n\n\n\n\n\n\n\n\n\n\n" );
+                jgtHeuteResult.add(2,Global.GlobalJaGottCurrentMessage );
 
                 RecyclerView rv = (RecyclerView)Global.GlobalMainActivity.findViewById(R.id.container);
 
@@ -96,7 +99,7 @@ public class JaGottParser {
         }
     }
 
-    public void ParseAndDisplayJaGottArchivText(String jsonResult) {
+    private void ParseAndDisplayJaGottArchivText(String jsonResult) {
 
         try {
             JSONObject jsonResponse = new JSONObject(jsonResult);
@@ -124,8 +127,6 @@ public class JaGottParser {
                 TextView messageView = (TextView) Global.GlobalMainActivity.findViewById(R.id.messageView);
                 messageView.setText(Html.fromHtml(message).toString().trim() + "\n\n\n\n\n\n\n");
 
-                //Global.GlobalMainActivity.setButtonListenerforArchiveTextView();
-
                 Global.GlobalJaGottCurrentDate = date;
                 Global.GlobalJaGottCurrentVerse = Html.fromHtml(split[0]).toString().trim();
                 Global.GlobalJaGottCurrentMessage = Html.fromHtml(message).toString().trim();
@@ -134,10 +135,10 @@ public class JaGottParser {
         } catch (Exception e) {
             //Toast.makeText(getApplicationContext(), "Error" + e.toString(),
             //      Toast.LENGTH_SHORT).show();
-            try {
-                String date = "Ups, da ist wohl was schief gelaufen.";
-                String text = "Es tut uns sehr leid, aber dein Text kann nicht aus dem Archiv geladen werden.";
-                String message = "Bitte überprüfe deine Internetverbindung. Wenn es weiterhin nicht funktioniert, schicke eine Mail an andre@ja-gott.de";
+            //try {
+                //String date = "Ups, da ist wohl was schief gelaufen.";
+                //String text = "Es tut uns sehr leid, aber dein Text kann nicht aus dem Archiv geladen werden.";
+                //String message = "Bitte überprüfe deine Internetverbindung. Wenn es weiterhin nicht funktioniert, schicke eine Mail an andre@ja-gott.de";
 
                 //TextView dateView = (TextView) Global.GlobalMainActivity.findViewById(R.id.dateView);
                 //dateView.setText(date);
@@ -146,14 +147,14 @@ public class JaGottParser {
                 //verse.setTextColor(Global.GlobalMainActivity.getResources().getColor(R.color.white));
                 //TextView messageView = (TextView) Global.GlobalMainActivity.findViewById(R.id.messageView);
                 //messageView.setText(message);
-            } catch (Exception ex) {
+            //} catch (Exception ex) {
                 //View has been changed while loading text. Error Message cannot be displayed.
                 //Do nothing!
-            }
+            //}
         }
     }
 
-    public void ParseAndDisplayJaGottArchiv(String jsonResult) {
+    private void ParseAndDisplayJaGottArchiv(String jsonResult) {
 
         ArrayList<String> archivList = new ArrayList<>();
 
@@ -277,7 +278,7 @@ public class JaGottParser {
         return answer;
     }
 
-    public void refreshJaGottHeute()
+    void refreshJaGottHeute()
     {
         String url_heute = "http://www.ja-gott.de/ja_gott_heute.php";
         HeuteJsonReadTask task = new HeuteJsonReadTask();
@@ -285,7 +286,7 @@ public class JaGottParser {
         task.execute(url_heute);
     }
 
-    public void refreshJaGottArchiv()
+    void refreshJaGottArchiv()
     {
         String url_archiv = "http://www.ja-gott.de/ja-gott-archiv.php";
         ArchivJsonReadTask task = new ArchivJsonReadTask();
