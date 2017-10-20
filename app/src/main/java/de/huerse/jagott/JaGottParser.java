@@ -1,10 +1,11 @@
 package de.huerse.jagott;
 
 
+import android.content.Intent;
 import android.os.AsyncTask;
+import android.os.Bundle;
 import android.support.v7.widget.RecyclerView;
 import android.text.Html;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import org.apache.http.HttpResponse;
@@ -22,6 +23,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import de.huerse.jagott.Adapters.JgtArchivRVAdapter;
 import de.huerse.jagott.Adapters.JgtHeuteRVAdapter;
@@ -33,6 +35,8 @@ public class JaGottParser {
 
     private ArrayList<NameValuePair> mNameValuePairs = new ArrayList<>();
 
+    static HashMap<String, String> mTitleToIdMapper = new HashMap<>();
+
     private void ParseAndDisplayJaGottHeute(String jsonResult) {
 
         try {
@@ -43,8 +47,6 @@ public class JaGottParser {
                 JSONObject jsonChildNode = jsonMainNode.getJSONObject(i);
                 String date = jsonChildNode.optString("title");
                 String text = jsonChildNode.optString("introtext");
-                //String outPut = name + "-" + number;
-                //employeeList.add(createEmployee("employees", outPut));
                 String split[] = text.split("\r\n");
 
                 String message = "";
@@ -53,7 +55,6 @@ public class JaGottParser {
                         message = message + split[j];
                 }
 
-                //Global.GlobalJaGottHeuteText = date + "\n" + Html.fromHtml(split[0]).toString().trim() + "\n" + Html.fromHtml(message).toString().trim() + "\n";
                 Global.GlobalJaGottCurrentText = date + "\n" + Html.fromHtml(split[0]).toString().trim() + "\n" + Html.fromHtml(message).toString().trim() + "\n";
                 Global.GlobalJaGottCurrentDate = date;
                 Global.GlobalJaGottCurrentVerse = Html.fromHtml(split[0]).toString().trim();
@@ -113,24 +114,34 @@ public class JaGottParser {
                 //employeeList.add(createEmployee("employees", outPut));
                 String split[] = text.split("\r\n");
 
-                TextView dateView = (TextView) Global.GlobalMainActivity.findViewById(R.id.dateView);
-                dateView.setText(date);
-                TextView verse = (TextView) Global.GlobalMainActivity.findViewById(R.id.verseView);
-                verse.setText(Html.fromHtml(split[0]).toString().trim());
-
                 String message = "";
                 for (int j = 1; j < split.length; j++) {
                     if (!split[j].equals("\n"))
                         message = message + split[j];
                 }
 
-                TextView messageView = (TextView) Global.GlobalMainActivity.findViewById(R.id.messageView);
-                messageView.setText(Html.fromHtml(message).toString().trim() + "\n\n\n\n\n\n\n");
-
                 Global.GlobalJaGottCurrentDate = date;
                 Global.GlobalJaGottCurrentVerse = Html.fromHtml(split[0]).toString().trim();
                 Global.GlobalJaGottCurrentMessage = Html.fromHtml(message).toString().trim();
                 Global.GlobalJaGottCurrentText = date + "\n" + Html.fromHtml(split[0]).toString().trim() + "\n" + Html.fromHtml(message).toString().trim() + "\n";
+
+                ArrayList<String> jgtHeuteResult = new ArrayList<>();
+                jgtHeuteResult.add(0,Global.GlobalJaGottCurrentDate );
+                jgtHeuteResult.add(1, Global.GlobalJaGottCurrentVerse);
+                jgtHeuteResult.add(2,Global.GlobalJaGottCurrentMessage);
+
+                RecyclerView rv = (RecyclerView)Global.GlobalMainActivity.findViewById(R.id.container);
+
+                //JgtHeuteRVAdapter adapter = new JgtHeuteRVAdapter(jgtHeuteResult);
+                //rv.setAdapter(adapter);
+                //define a new Intent for the second Activity
+                Intent intent = new Intent(Global.GlobalMainActivity, JgtArchivTextActivity.class);
+                Bundle b = new Bundle();
+                b.putStringArrayList("jgtHeuteResult", jgtHeuteResult);
+                intent.putExtras(b);
+
+                //start the second Activity
+                Global.GlobalMainActivity.startActivity(intent);
             }
         } catch (Exception e) {
             //Toast.makeText(getApplicationContext(), "Error" + e.toString(),
@@ -157,6 +168,7 @@ public class JaGottParser {
     private void ParseAndDisplayJaGottArchiv(String jsonResult) {
 
         ArrayList<String> archivList = new ArrayList<>();
+        mTitleToIdMapper = new HashMap<>();
 
         try {
             JSONObject jsonResponse = new JSONObject(jsonResult);
@@ -166,6 +178,8 @@ public class JaGottParser {
             {
                 JSONObject jsonChildNode = jsonMainNode.getJSONObject(i);
                 String name = jsonChildNode.optString("title");
+                String id = jsonChildNode.optString("id");
+                mTitleToIdMapper.put(name, id);
                 archivList.add(name);
             }
 
@@ -180,9 +194,9 @@ public class JaGottParser {
     }
 
     public void clickOnArchiveText(String selected) {
-        mNameValuePairs.add(new BasicNameValuePair("title", selected));
+        mNameValuePairs.add(new BasicNameValuePair("id", mTitleToIdMapper.get(selected)));
 
-        String url_archiv_text = "http://www.ja-gott.de/ja_gott_archiv_text.php";
+        String url_archiv_text = "http://www.ja-gott.de/archiv-text-jagott.php";
         ArchivTextJsonReadTask task = new ArchivTextJsonReadTask();
         // passes values for the urls string array
         task.execute(url_archiv_text);
@@ -288,7 +302,7 @@ public class JaGottParser {
 
     void refreshJaGottArchiv()
     {
-        String url_archiv = "http://www.ja-gott.de/ja-gott-archiv.php";
+        String url_archiv = "http://www.ja-gott.de/archiv-jagott.php";
         ArchivJsonReadTask task = new ArchivJsonReadTask();
         // passes values for the urls string array
         task.execute(url_archiv);

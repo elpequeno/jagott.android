@@ -4,14 +4,17 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
+import android.graphics.PorterDuff;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
+import android.support.v4.view.ViewCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
@@ -87,9 +90,26 @@ public class JaGottMain extends AppCompatActivity {
         mCollapsingToolbar = (CollapsingToolbarLayout) findViewById(R.id.collapsing_toolbar);
         mSwipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipeContainer);
 
+        AppBarLayout appBar= (AppBarLayout)  findViewById(R.id.appbar);
+
+        appBar.addOnOffsetChangedListener(new AppBarLayout.OnOffsetChangedListener() {
+            @Override
+            public void onOffsetChanged(AppBarLayout appBarLayout, int verticalOffset) {
+                if ((mCollapsingToolbar.getHeight() + verticalOffset) < (2 * ViewCompat.getMinimumHeight(mCollapsingToolbar))) {
+                    mToolbar.getNavigationIcon().setColorFilter(getResources().getColor(R.color.black), PorterDuff.Mode.SRC_ATOP);
+                } else {
+                    mToolbar.getNavigationIcon().setColorFilter(getResources().getColor(R.color.white), PorterDuff.Mode.SRC_ATOP);
+                }
+            }
+        });
         //hide Floating action button
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.hide();
+        fab.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                saveText();
+            }
+        });
+        // fab.hide();
 
         //Initialisierung der Variablen
         mAlarmHandler = new AlarmHandler(getApplicationContext());
@@ -166,7 +186,7 @@ public class JaGottMain extends AppCompatActivity {
     private void setUpNavDrawer() {
         if (mToolbar != null) {
             //getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-            mToolbar.setNavigationIcon(R.mipmap.ic_drawer);
+            mToolbar.setNavigationIcon(R.drawable.ic_drawer);
             mToolbar.setNavigationOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -187,17 +207,18 @@ public class JaGottMain extends AppCompatActivity {
                 //hide Floating action button
                 fab = (FloatingActionButton) findViewById(R.id.fab);
                 p = (CoordinatorLayout.LayoutParams) fab.getLayoutParams();
-                p.setAnchorId(R.id.container);
+                p.setAnchorId(R.id.collapsing_toolbar);
                 fab.setLayoutParams(p);
                 fab.setVisibility(View.GONE);
 
                 switch (menuItem.getItemId()) {
                     case R.id.title_section1:
+                        fab.setVisibility(View.VISIBLE);
                         initializeGUI();
                         //this lines are needed to prevent title from vanishing when toolbar collapses
                         setTitle(R.string.title_section1);
 
-                        mImageHeaderView.setImageResource(R.drawable.image_heute2);
+                        mImageHeaderView.setImageResource(R.drawable.heute);
                         new JaGottHeute().execute();
                         mSection = 0;
                         mSwipeRefreshLayout.setEnabled(true);
@@ -208,7 +229,7 @@ public class JaGottMain extends AppCompatActivity {
                         initializeGUI(); //um "Laden"-Text anzuzeigen
                         setTitle(R.string.title_section2);
 
-                        mImageHeaderView.setImageResource(R.drawable.coffee);
+                        mImageHeaderView.setImageResource(R.drawable.archiv);
                         new JaGottArchiv().execute();
                         mSection = 1;
                         mSwipeRefreshLayout.setEnabled(true);
@@ -216,7 +237,7 @@ public class JaGottMain extends AppCompatActivity {
                         break;
                     case R.id.title_section3:
                         setTitle(R.string.title_section3);
-                        mImageHeaderView.setImageResource(R.drawable.image_team);
+                        mImageHeaderView.setImageResource(R.drawable.team);
                         initializeGUI(); //um "Laden"-Text anzuzeigen
 
                         new JaGottTeam().execute();
@@ -239,12 +260,13 @@ public class JaGottMain extends AppCompatActivity {
                         mSwipeRefreshLayout.setEnabled(false);
                         break;
                     case R.id.title_section5:
-                        fab = (FloatingActionButton) findViewById(R.id.fab);
+                        //fab = (FloatingActionButton) findViewById(R.id.fab);
                         p = (CoordinatorLayout.LayoutParams) fab.getLayoutParams();
                         p.setAnchorId(R.id.container);
-                        fab.setLayoutParams(p);
-                        fab.setVisibility(View.VISIBLE);
-                        //fab.show();
+                        mImageHeaderView.setImageResource(R.drawable.favoriten);
+                        //fab.setLayoutParams(p);
+                        //fab.setVisibility(View.VISIBLE);
+                        ////fab.show();
 
                         //this lines are needed to prevent title from vanishing when toolbar collapses
                         setTitle(R.string.title_section5);
@@ -311,79 +333,9 @@ public class JaGottMain extends AppCompatActivity {
             Intent sharingIntent = new Intent(Intent.ACTION_SEND);
             sharingIntent.setType("text/plain");
             String shareBody = Global.GlobalJaGottCurrentText;
-            sharingIntent.putExtra(Intent.EXTRA_SUBJECT, "JA-GOTT - Deine Seite zum Auftanken\n");
+            sharingIntent.putExtra(Intent.EXTRA_SUBJECT, "JA-GOTT - Deine Andachtsapp\n");
             sharingIntent.putExtra(Intent.EXTRA_TEXT, shareBody);
             startActivity(Intent.createChooser(sharingIntent, "Share via"));
-            return true;
-        }
-
-        if (item.getItemId() == R.id.action_save) {
-            AlertDialog.Builder adb = new AlertDialog.Builder(this);
-            adb.setTitle("Speichern");
-
-            LinearLayout layout = new LinearLayout(this);
-            layout.setOrientation(LinearLayout.VERTICAL);
-
-            //final EditText name = new EditText(this);
-            //name.setHint("Gebe einen Titel ein.");
-            //layout.addView(name);
-
-            final EditText note = new EditText(this);
-            note.setHint("Füge eine Notiz hinzu.");
-            layout.addView(note);
-
-            adb.setView(layout);
-
-            adb.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
-                public void onClick(DialogInterface dialog, int id) {
-                    //Action for 'Ok' Button
-                    DBAdapter db = new DBAdapter(Global.GlobalMainActivity);
-                    db.open();
-
-                    //String save_name = name.getText().toString();
-                    //if (save_name.isEmpty()) {
-                        //save_name = Global.GlobalJaGottCurrentDate;
-                    //}
-
-                    String mynote = note.getText().toString();
-                    if (mynote.isEmpty()) {
-                        mynote = "-";
-                    }
-
-                    String save_name = Global.GlobalJaGottCurrentDate;
-                    long record_id = -1;
-                    Cursor cur = db.getRecord(save_name);
-                    if (cur.getCount() == 0) {
-                        record_id = db.insertRecord(save_name,
-                                Global.GlobalJaGottCurrentDate,
-                                Global.GlobalJaGottCurrentVerse,
-                                Global.GlobalJaGottCurrentMessage,
-                                mynote);
-                    }
-                    db.close();
-
-                    db.open();
-                    Cursor c = db.getRecord(record_id);
-                    if (c.moveToFirst()) {
-                        Toast.makeText(Global.GlobalMainActivity,
-                                "Text gespeichert als: " + c.getString(1), Toast.LENGTH_SHORT).show();
-                    } else
-                        Toast.makeText(Global.GlobalMainActivity, "Diesen Text hast du schon als Lieblingstext gespeichert.", Toast.LENGTH_LONG).show();
-                    db.close();
-                }
-            });
-
-
-            adb.setNegativeButton("Abbrechen", new DialogInterface.OnClickListener() {
-                public void onClick(DialogInterface dialog, int id) {
-                    // Action for 'Cancel' Button
-                    Toast.makeText(Global.GlobalMainActivity, "Speichern abgebrochen.", Toast.LENGTH_SHORT).show();
-                    dialog.cancel();
-                }
-            });
-            adb.setIcon(R.drawable.ic_launcher);
-            adb.show();
-
             return true;
         }
 
@@ -398,6 +350,72 @@ public class JaGottMain extends AppCompatActivity {
 //        }
 
         return super.onOptionsItemSelected(item);
+    }
+
+
+    public void saveText(){
+        AlertDialog.Builder adb = new AlertDialog.Builder(this);
+        adb.setTitle("Zu Favoriten hinzufügen");
+
+        LinearLayout layout = new LinearLayout(this);
+        layout.setOrientation(LinearLayout.VERTICAL);
+
+        //final EditText name = new EditText(this);
+        //name.setHint("Gebe einen Titel ein.");
+        //layout.addView(name);
+
+        final EditText note = new EditText(this);
+        note.setHint("Füge eine Notiz hinzu");
+        layout.addView(note);
+
+        adb.setView(layout);
+
+        adb.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                //Action for 'Ok' Button
+                DBAdapter db = new DBAdapter(Global.GlobalMainActivity);
+                db.open();
+
+                //String save_name = name.getText().toString();
+                //if (save_name.isEmpty()) {
+                //save_name = Global.GlobalJaGottCurrentDate;
+                //}
+
+                String mynote = note.getText().toString();
+                if (mynote.isEmpty()) {
+                    mynote = "-";
+                }
+
+                String save_name = Global.GlobalJaGottCurrentDate;
+                long record_id = -1;
+                Cursor cur = db.getRecord(save_name);
+                if (cur.getCount() == 0) {
+                    record_id = db.insertRecord(save_name,
+                            Global.GlobalJaGottCurrentDate,
+                            Global.GlobalJaGottCurrentVerse,
+                            Global.GlobalJaGottCurrentMessage,
+                            mynote);
+                }
+                //db.close();
+
+                //db.open();
+                Cursor c = db.getRecord(record_id);
+                if (c.moveToFirst()) {
+                    Toast.makeText(Global.GlobalMainActivity,
+                            "Text gespeichert als: " + c.getString(1), Toast.LENGTH_SHORT).show();
+                } else
+                    Toast.makeText(Global.GlobalMainActivity, "Diesen Text hast du schon als Lieblingstext gespeichert.", Toast.LENGTH_LONG).show();
+                db.close();
+            }
+        });
+
+        adb.setNegativeButton("Abbrechen", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                dialog.cancel();
+            }
+        });
+        adb.show();
+
     }
 
     private class ButtonHandler implements View.OnClickListener {
@@ -483,30 +501,31 @@ public class JaGottMain extends AppCompatActivity {
      */
     private class JaGottTeam extends AsyncTask<String, Void, String> {
 
+        JgtKontaktRVAdapter kontaktAdapter;
+
         @Override
         protected String doInBackground(String... strings) {
 
+            ArrayList<KontaktData> kontakte = new ArrayList<>();
+            //kontakte.add(new KontaktData("Habt ihr Fragen oder Anregungen?", "\nDann schreibt uns doch eine Mail!", R.drawable.ic_launcher,"", "")); //ic_empty
+            kontakte.add(new KontaktData("Michael Bayer", "michael@ja-gott.de", R.mipmap.michael, "Author", KontaktData.aboutMichael));
+            kontakte.add(new KontaktData("Lena Vach", "lena@ja-gott.de", R.mipmap.lena, "Authorin", KontaktData.aboutLena));
+            kontakte.add(new KontaktData("Carina Pfeiffer", "carina@ja-gott.de", R.mipmap.carina, "Authorin", KontaktData.aboutCarina));
+            kontakte.add(new KontaktData("Kerstin Penner", "kerstin@ja-gott.de", R.mipmap.kerstin, "Authorin", KontaktData.aboutKerstin));
+            kontakte.add(new KontaktData("Eva Dorothée Kurrer", "eva@ja-gott.de", R.mipmap.eva, "Authorin", KontaktData.aboutEva));
+            kontakte.add(new KontaktData("Marcel Meaubert", "marcel@ja-gott.de", R.mipmap.marcel, "Author", KontaktData.aboutMarcel));
+            kontakte.add(new KontaktData("Alexander Blümel", "alexander@ja-gott.de", R.mipmap.alexander, "Author", KontaktData.aboutAlexander));
+            kontakte.add(new KontaktData("André Klein", "andre@ja-gott.de", R.mipmap.andre, "Technik", KontaktData.aboutAndre));
+            kontakte.add(new KontaktData("Martin Forell", "martin@ja-gott.de", R.mipmap.martin, "Technik", KontaktData.aboutMartin));
+
+            kontaktAdapter = new JgtKontaktRVAdapter(kontakte);
             return "";//JaGottParser.parseJaGottOnline();
         }
 
         @Override
         protected void onPostExecute(String result) {
-            ArrayList<KontaktData> kontakte = new ArrayList<>();
-            kontakte.add(new KontaktData("Habt ihr Fragen oder Anregungen?", "\nDann schreibt uns doch eine Mail!", R.drawable.ic_launcher,"", "")); //ic_empty
-            kontakte.add(new KontaktData("Michael Bayer", "michael@ja-gott.de", R.drawable.michael, "Author", KontaktData.aboutMichael));
-            kontakte.add(new KontaktData("Lena Vach", "lena@ja-gott.de", R.drawable.lena, "Authorin", KontaktData.aboutLena));
-            kontakte.add(new KontaktData("Carina Pfeiffer", "carina@ja-gott.de", R.drawable.carina, "Authorin", KontaktData.aboutCarina));
-            kontakte.add(new KontaktData("Kerstin Penner", "kerstin@ja-gott.de", R.drawable.kerstin, "Authorin", KontaktData.aboutKerstin));
-            kontakte.add(new KontaktData("Eva Dorothée Kurrer", "eva@ja-gott.de", R.drawable.eva, "Authorin", KontaktData.aboutEva));
-            kontakte.add(new KontaktData("Marcel Meaubert", "marcel@ja-gott.de", R.drawable.marcel, "Author", KontaktData.aboutMarcel));
-            kontakte.add(new KontaktData("Alexander Blümel", "alexander@ja-gott.de", R.drawable.martin, "Author", KontaktData.aboutAlexander));
-            kontakte.add(new KontaktData("André Klein", "andre@ja-gott.de", R.drawable.andre, "Technik", KontaktData.aboutAndre));
-            kontakte.add(new KontaktData("Martin Forell", "martin@ja-gott.de", R.drawable.martin, "Technik", KontaktData.aboutMartin));
-
-
             RecyclerView rv = (RecyclerView) findViewById(R.id.container);
 
-            JgtKontaktRVAdapter kontaktAdapter = new JgtKontaktRVAdapter(kontakte);
             rv.setAdapter(kontaktAdapter);
             //mCurrentSelectedPosition = 0;
             mSection = 2;

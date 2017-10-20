@@ -75,17 +75,15 @@ public class JgtKontaktRVAdapter extends RecyclerView.Adapter<JgtKontaktRVAdapte
         jgtKontaktViewHolder.mail.setText(m_JgtKontaktResult.get(i).mail);
 
 
-        if (i == 0)
-        {
-            jgtKontaktViewHolder.image.getLayoutParams().height = 0;
-            jgtKontaktViewHolder.image.getLayoutParams().width = 0;
-            jgtKontaktViewHolder.image.requestLayout();
-            jgtKontaktViewHolder.about.setText("");
-        }
-        else
-        {
-            jgtKontaktViewHolder.image.getLayoutParams().height = 400;
-            jgtKontaktViewHolder.image.getLayoutParams().width = 400;
+//        if ( m_JgtKontaktResult.get(i).name == "Habt ihr Fragen oder Anregungen?")
+//        {
+//            jgtKontaktViewHolder.image.getLayoutParams().height = 0;
+//            jgtKontaktViewHolder.image.getLayoutParams().width = 0;
+//            jgtKontaktViewHolder.image.requestLayout();
+//            jgtKontaktViewHolder.about.setText("");
+//        }
+//        else
+//        {
             jgtKontaktViewHolder.image.requestLayout();
             String replaceMailHtml = new String("<a href=\"mailto:" + m_JgtKontaktResult.get(i).mail + "\"> " + m_JgtKontaktResult.get(i).mail + " </a>");
             Spanned replaceMail;
@@ -128,7 +126,7 @@ public class JgtKontaktRVAdapter extends RecyclerView.Adapter<JgtKontaktRVAdapte
                     dialog.show();
                 }
             });
-        }
+//        }
 
         jgtKontaktViewHolder.image.setImageResource(m_JgtKontaktResult.get(i).photoId);
     }

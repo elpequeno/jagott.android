@@ -23,29 +23,31 @@
                 android:adjustViewBounds="true"
                 android:lineSpacingMultiplier="1.5"
                 android:text="@string/date"
-                android:textSize="20dp" />
+                android:textSize="20sp"
+                android:textColor="@color/black"
+                android:paddingTop="12dp"/>
 
             <TextView
                 android:id="@+id/verseView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_alignParentLeft="true"
                 android:layout_marginTop="25dp"
                 android:fadingEdge="vertical"
                 android:lineSpacingMultiplier="1.5"
                 android:text="@string/message"
-                android:textStyle="bold" />
+                android:textStyle="bold"
+                android:textColor="@color/black"/>
 
             <TextView
                 android:id="@+id/messageView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_alignParentLeft="true"
-                android:layout_marginBottom="48dp"
+                android:layout_marginBottom="86dp"
                 android:layout_marginTop="25dp"
                 android:fadingEdge="vertical"
                 android:lineSpacingMultiplier="1.5"
-                android:text="@string/date" />
+                android:text="@string/date"
+                android:textColor="@color/black"/>
 
 
         </LinearLayout>

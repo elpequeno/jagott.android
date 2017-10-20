@@ -1,10 +1,7 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    tools:context="de.huerse.jagott.JaGottMain" >
+    tools:context="de.huerse.jagott.JaGottMain">
     <item android:id="@+id/action_share"
         android:title="@string/action_share"
-        android:icon="@drawable/ic_share" />
-    <item android:id="@+id/action_save"
-        android:title="@string/action_save"
-        android:icon="@mipmap/ic_jgt_fav"/>
+        android:icon="@mipmap/ic_share" />
 </menu>

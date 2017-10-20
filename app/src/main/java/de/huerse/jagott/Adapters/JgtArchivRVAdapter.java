@@ -9,7 +9,7 @@ import android.widget.TextView;
 
 import java.util.List;
 
-import de.huerse.jagott.Global;
+import de.huerse.jagott.JaGottParser;
 import de.huerse.jagott.R;
 
 /**
@@ -30,7 +30,6 @@ public class JgtArchivRVAdapter extends RecyclerView.Adapter<JgtArchivRVAdapter.
 
         JgtArchivViewHolder(View itemView) {
             super(itemView);
-            rl = (RelativeLayout) itemView.findViewById(R.id.rl);
             //rl.setBackgroundColor(Color.LTGRAY);
             titleView = (TextView)itemView.findViewById(R.id.titleView);
         }
@@ -57,9 +56,7 @@ public class JgtArchivRVAdapter extends RecyclerView.Adapter<JgtArchivRVAdapter.
                 TextView tv = (TextView) v;
                 String selectedDate = tv.getText().toString();
 
-                RecyclerView rv = (RecyclerView) Global.GlobalMainActivity.findViewById(R.id.container);
-                JgtArchivTextRVAdapter archivTextAdapter = new JgtArchivTextRVAdapter(selectedDate);
-                rv.setAdapter(archivTextAdapter);
+                new JaGottParser().clickOnArchiveText(selectedDate);
             }
         });
     }

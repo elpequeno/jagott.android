@@ -10,15 +10,12 @@
         android:id="@+id/alarmTimePicker"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:headerBackground="@color/primary_300"
-        android:numbersBackgroundColor="@color/primary_100" />
+        android:headerBackground="@color/primary_300" />
 
     <TextView
         android:id="@+id/alarmInfo"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
         android:layout_marginTop="20dp"
         android:layout_marginLeft="20dp"
         android:allowUndo="false"

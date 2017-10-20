@@ -3,11 +3,11 @@
 
     <string name="app_name">JA-GOTT</string>
     <string name="app_description">DEINE SEITE ZUM AUFTANKEN</string>
-    <string name="title_section1">JA-GOTT HEUTE</string>
-    <string name="title_section2">JA-GOTT ARCHIV</string>
-    <string name="title_section3">JA-GOTT TEAM</string>
-    <string name="title_section4">ERINNERUNG</string>
-    <string name="title_section5">LIEBLINGSTEXTE</string>
+    <string name="title_section1">Heute</string>
+    <string name="title_section2">Archiv</string>
+    <string name="title_section3">Team</string>
+    <string name="title_section4">Erinnerung</string>
+    <string name="title_section5">Favoriten</string>
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
     <string name="action_save">Speichern</string>
@@ -16,6 +16,9 @@
     <string name="action_settings">Einstellungen</string>
     <string name="date">-</string>
     <string name="message">    Lade…   </string>
+    <string name="more">mehr…</string>
+    <string name="mail">info@ja-gott.de</string>
+    <string name="content_desciption">Hier sollte ein Bild zu sehen sein</string>
     <string name="error">Es ist ein Fehler aufgetreten. Das tut uns Leid. Sollte das öfter vorkommen, melde dich bitte unter andre@ja-gott.de</string>
 
     <string name="about_andre">Hola, mein Name ist André Klein und ich wohne im schönen Heidelberg.
@@ -43,13 +46,16 @@
     <color name="primary_100">#cac9c9</color>
     <color name="primary_300">#848181</color>
 
-    <color name="primary_500">#42a5f5</color>
-    <color name="primary_700">#0077c2</color>
+    <color name="primary_500">#eae9e9</color>
+    <color name="primary_700">#c7c7c7</color>
 
-    <color name="primary_A400">#ffca28</color>
-    <color name="primary_A700">#c79a00</color>
+    <color name="primary_A400">#fdd835</color>
+    <color name="primary_A700">#c6a700</color>
 
     <color name="text_primary_light">#FFFFFF</color>
     <color name="text_primary_dark">#212121</color>
     <color name="text_dark_54">#737373</color>
+    <string name="title_activity_jgt_favorite_text">Favorit</string>
+    <string name="title_text">Text</string>
+    <string name="title_note">Notiz</string>
 </resources>

@@ -1,6 +1,5 @@
 package de.huerse.jagott.Adapters;
 
-import android.graphics.Color;
 import android.os.Build;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
@@ -33,7 +32,7 @@ public class JgtHeuteRVAdapter extends RecyclerView.Adapter<JgtHeuteRVAdapter.Jg
         JgtHeuteViewHolder(View itemView) {
             super(itemView);
             cv = (CardView)itemView.findViewById(R.id.cv);
-            cv.setCardBackgroundColor(Color.LTGRAY);
+            //cv.setCardBackgroundColor(Color.LTGRAY);
             dateView = (TextView)itemView.findViewById(R.id.dateView);
             verseView = (TextView)itemView.findViewById(R.id.verseView);
             messageView = (TextView)itemView.findViewById(R.id.messageView);

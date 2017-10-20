@@ -59,10 +59,10 @@ public class KontaktData {
             "\n\nAuch wenn ich Informatiker bin, bin ich am liebsten draußen. Ich liebe Jungschararbeit, spiele Fanfare, Gitarre und seit Kurzem American Football." +
             "\n\nBei JA-GOTT bin ich für die Homepage und die Android-App verantwortlich. Ich freue mich immer über Feedback und Anregungen.\n";
 
-    static final String aboutMartin = "Mein Name ist Martin Forell und ich wohne zur Zeit im schönen Karlsruhe :) Hier studiere ich einerseits Informationswirtschaft am KIT " +
-            "(ähnlich wie Wirtschaftsinformatik :) ) und arbeite währenddessen als Gitarrenlehrer an einer Musikschule und als Medieninformatiker am Zentrum " +
-            "für mediales Lernen.\n\nIn meiner Freizeit liebe ich es Gitarre zu spielen und Sport zu machen, außerdem fahre ich gerne zu abgelegenen Orten, " +
-            "um diese früh morgens zum Sonnenaufgang mit meiner Kamera zu fotografieren.\n\nBei JaGott bin ich zur Zeit für die iOS App und die Homepage zuständig. ";
+    static final String aboutMartin = "Hallo,\n" +
+            "ich bin Martin und wohne im schönen Karlsruhe. Dort studiere ich Informationswirtschaft im Master und arbeite als Medieninformatiker am ZML. In meiner Freizeit liebe ich es Gitarre zu spielen oder an verlassene Orte zu pilgern, um dort Sonnenaufgänge zu fotografieren.\n" +
+            "\n" +
+            "Bei JaGott bin ich für die iOS App und die Homepage verantwortlich. \n";
 
 
 }

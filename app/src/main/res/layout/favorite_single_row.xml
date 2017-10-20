@@ -1,21 +1,33 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-android:layout_width="match_parent" android:layout_height="wrap_content">
-
-<RelativeLayout
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:padding="10dp"
     android:background="@color/primary_50"
-    android:id="@+id/rl">
+    android:padding="10dp">
 
     <TextView
-        android:layout_width="match_parent"
-        android:layout_height="25dp"
-        android:layout_margin="5dp"
         android:id="@+id/listItemText"
-        android:gravity="center_vertical"/>
-</RelativeLayout>
+        android:layout_width="wrap_content"
+        android:layout_height="25dp"
+        android:layout_margin="5dp" />
+
+    <!--ADDED SPACER VIEW -->
+    <!--View
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        /-->
+    <!--ADDED SPACER VIEW -->
+
+
+    <!--ImageView
+        android:id="@+id/moreIcon"
+        android:layout_width="33dp"
+        android:layout_height="33dp"
+        android:layout_marginEnd="0dp"
+        app:srcCompat="@mipmap/ic_more"
+        android:contentDescription="@string/content_desciption"/-->
 
 </LinearLayout>

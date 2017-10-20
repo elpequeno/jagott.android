@@ -1,7 +1,9 @@
 package de.huerse.jagott.Adapters;
 
+import android.content.Intent;
 import android.database.Cursor;
 import android.os.AsyncTask;
+import android.os.Bundle;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,6 +15,7 @@ import java.util.List;
 
 import de.huerse.jagott.DBAdapter;
 import de.huerse.jagott.Global;
+import de.huerse.jagott.JgtActivityFavoriteText;
 import de.huerse.jagott.R;
 
 /**
@@ -64,8 +67,6 @@ public class JgtFavoritesRVAdapter extends RecyclerView.Adapter<JgtFavoritesRVAd
                 Cursor cur = db.getRecord(selectedDate, true);
 
                 try{
-                    Global.GlobalMainActivity.setTitle(cur.getString(1));
-
                     //Read selected favorite text from databse
                     new FavoriteDisplayTask().execute(cur.getString(1));
                 }catch(Exception e)
@@ -107,12 +108,21 @@ public class JgtFavoritesRVAdapter extends RecyclerView.Adapter<JgtFavoritesRVAd
                 ArrayList<String> jgtHeuteResult = new ArrayList<>();
                 jgtHeuteResult.add(0,Global.GlobalJaGottCurrentDate );
                 jgtHeuteResult.add(1, Global.GlobalJaGottCurrentVerse);
-                jgtHeuteResult.add(2,Global.GlobalJaGottCurrentMessage + "\n\nNotiz:\n" + cur.getString(5) + "\n\n\n\n\n\n\n\n\n\n\n\n\n" );
+                jgtHeuteResult.add(2,Global.GlobalJaGottCurrentMessage);
+                jgtHeuteResult.add(3,cur.getString(5));
 
                 RecyclerView rv = (RecyclerView)Global.GlobalMainActivity.findViewById(R.id.container);
 
-                JgtHeuteRVAdapter adapter = new JgtHeuteRVAdapter(jgtHeuteResult);
-                rv.setAdapter(adapter);
+                //JgtHeuteRVAdapter adapter = new JgtHeuteRVAdapter(jgtHeuteResult);
+                //rv.setAdapter(adapter);
+                //define a new Intent for the second Activity
+                Intent intent = new Intent(Global.GlobalMainActivity, JgtActivityFavoriteText.class);
+                Bundle b = new Bundle();
+                b.putStringArrayList("jgtHeuteResult", jgtHeuteResult);
+                intent.putExtras(b);
+
+                //start the second Activity
+                Global.GlobalMainActivity.startActivity(intent);
 
             }
             catch(Exception e)

@@ -20,7 +20,7 @@
             android:layout_height="192dp"
             android:fitsSystemWindows="true"
             android:stateListAnimator="@drawable/appbar_shadow"
-            android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
+            >
             <android.support.design.widget.CollapsingToolbarLayout
                 android:id="@+id/collapsing_toolbar"
                 android:layout_width="match_parent"
@@ -30,12 +30,13 @@
                 app:expandedTitleMarginEnd="16dp"
                 app:expandedTitleMarginStart="16dp"
                 app:expandedTitleTextAppearance="@style/HeaderTitleStyle"
+                app:collapsedTitleTextAppearance="@style/CollapsedHeaderTitleStyle"
                 app:layout_scrollFlags="scroll|exitUntilCollapsed">
                 <ImageView
                     android:id="@+id/header"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:background="@drawable/image_heute2"
+                    android:background="@drawable/heute"
                     android:fitsSystemWindows="true"
                     android:scaleType="centerCrop"
                     app:layout_collapseMode="parallax" />
@@ -60,7 +61,9 @@
         <android.support.v7.widget.RecyclerView
             android:id="@+id/container"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content" >
+
+        </android.support.v7.widget.RecyclerView>
 
         </android.support.v4.widget.SwipeRefreshLayout>
 
@@ -70,9 +73,12 @@
             android:layout_height="wrap_content"
             android:layout_margin="20dp"
             android:clickable="true"
-            android:src="@drawable/ic_share"
-            app:layout_anchor="@+id/appbar"
+            android:src="@mipmap/ic_jgt_fav"
+            app:backgroundTint="@android:color/holo_orange_light"
+            app:layout_anchor="@id/collapsing_toolbar"
+            app:elevation="8dp"
             app:layout_anchorGravity="bottom|right|end" />
+
     </android.support.design.widget.CoordinatorLayout>
 
     <android.support.design.widget.NavigationView

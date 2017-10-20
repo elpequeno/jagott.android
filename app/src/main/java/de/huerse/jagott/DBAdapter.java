@@ -9,30 +9,27 @@ import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
 public class DBAdapter {
-    public static final String KEY_ROWID = "id";
-    public static final String KEY_NAME = "name";
-    public static final String KEY_DATE = "date";
-    public static final String KEY_VERSE = "verse";
-    public static final String KEY_TEXT = "text";
-    public static final String KEY_NOTES = "notes";
+    private static final String KEY_ROWID = "id";
+    private static final String KEY_NAME = "name";
+    private static final String KEY_DATE = "date";
+    private static final String KEY_VERSE = "verse";
+    private static final String KEY_TEXT = "text";
+    private static final String KEY_NOTES = "notes";
     private static final String TAG = "DBAdapter";
 
     private static final String DATABASE_NAME = "MyFavorite";
     private static final String DATABASE_TABLE = "favorite";
-    private static final int DATABASE_VERSION = 3;
+    private static final int DATABASE_VERSION = 5;
 
     private static final String DATABASE_CREATE =
             "create table if not exists favorite (id integer primary key autoincrement, "
             + "name VARCHAR not null, date VARCHAR, verse VARCHAR, text VARCHAR, notes);";
 
-    private final Context context;
-
     private DatabaseHelper DBHelper;
     private SQLiteDatabase db;
 
-    public DBAdapter(Context ctx)
+    public DBAdapter(Context context)
     {
-        this.context = ctx;
         DBHelper = new DatabaseHelper(context);
     }
 
@@ -58,7 +55,7 @@ public class DBAdapter {
         {
             Log.w(TAG, "Upgrading database from version " + oldVersion + " to "
                     + newVersion + ", which will destroy all old data");
-            db.execSQL("DROP TABLE IF EXISTS favorite");
+            //db.execSQL("DROP TABLE IF EXISTS favorite");
             onCreate(db);
         }
     }
@@ -136,15 +133,15 @@ public class DBAdapter {
     }
 
     //---updates a record---
-    public boolean updateRecord(long rowId, String name, String title, String duedate, String course, String notes)
+    public long updateRecord(long rowId, String title, String verse, String message, String notes)
     {
         ContentValues args = new ContentValues();
-        args.put(KEY_NAME, name);
+        args.put(KEY_NAME, title);
         args.put(KEY_DATE, title);
-        args.put(KEY_VERSE, duedate);
-        args.put(KEY_TEXT, course);
+        args.put(KEY_VERSE, verse);
+        args.put(KEY_TEXT, message);
         args.put(KEY_NOTES, notes);
-        return db.update(DATABASE_TABLE, args, KEY_ROWID + "=" + rowId, null) > 0;
+        return db.update(DATABASE_TABLE, args, KEY_ROWID + "=" + rowId, null);
     }
 
     //---deletes a particular record---
